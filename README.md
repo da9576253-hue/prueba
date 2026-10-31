@@ -12,6 +12,12 @@ La pestaña se guarda en el historial como **"Ciberseguridad | Centro de Segurid
 2. Render → New → Web Service → elige el repo (detecta `render.yaml`).
 3. Abre `https://TU-APP.onrender.com` desde cualquier dispositivo.
 
+## Buscar con Google
+Google ya no ofrece API abierta para cuentas nuevas, así que se usa serper.dev (devuelve resultados de Google):
+1. Crea cuenta en https://serper.dev y copia tu API key (incluye créditos gratis).
+2. Render → tu servicio → Environment → agrega `SERPER_API_KEY` = tu clave → Save.
+3. Sin clave, el portal usa DuckDuckGo como respaldo.
+
 ## Robustez incluida
 - Dos proveedores de búsqueda con respaldo automático y timeout por petición.
 - Caché de resultados, límite por IP (429), tope de búsquedas simultáneas (503).

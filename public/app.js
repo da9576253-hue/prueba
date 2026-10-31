@@ -12,7 +12,11 @@ function el(tag, props = {}, ...kids) {
   kids.forEach((k) => n.append(k));
   return n;
 }
-function message(text) { box.replaceChildren(el('p', { className: 'msg', textContent: text })); }
+function message(text, q) {
+  const p = el('p', { className: 'msg', textContent: text });
+  if (q) p.append(' ', el('a', { href: 'https://www.google.com/search?q=' + encodeURIComponent(q), target: '_blank', rel: 'noopener noreferrer', textContent: 'Buscar en Google' }));
+  box.replaceChildren(p);
+}
 function safeUrl(u) {
   try { const p = new URL(u); return /^https?:$/.test(p.protocol) ? p.href : null; } catch { return null; }
 }
@@ -25,15 +29,15 @@ async function search(q) {
   try {
     const r = await fetch('/api/search?q=' + encodeURIComponent(q), { signal: controller.signal });
     const data = await r.json().catch(() => ({}));
-    if (!r.ok) return message(data.error || 'No se pudo realizar la búsqueda.');
+    if (!r.ok) return message(data.error || 'No se pudo realizar la búsqueda.', q);
     const items = (Array.isArray(data) ? data : []).filter((x) => safeUrl(x.url));
-    if (!items.length) return message('Sin resultados.');
+    if (!items.length) return message('Sin resultados.', q);
     box.replaceChildren(...items.map((x) => el('div', { className: 'r' },
       el('a', { href: safeUrl(x.url), target: '_blank', rel: 'noopener noreferrer', textContent: x.title }),
       el('small', { textContent: x.url }),
       el('p', { textContent: x.snippet || '' }))));
   } catch (e) {
-    if (e.name !== 'AbortError') message('Sin conexión. Revisa tu internet e inténtalo otra vez.');
+    if (e.name !== 'AbortError') message('Sin conexión. Revisa tu internet e inténtalo otra vez.', q);
   } finally {
     document.title = TITLE;
   }

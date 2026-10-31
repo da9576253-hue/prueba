@@ -3,6 +3,8 @@
  * Portal con buscador — servidor robusto sin dependencias (Node >= 18).
  *
  * Variables de entorno (todas opcionales):
+ *   SERPER_API_KEY            Clave de serper.dev -> resultados de GOOGLE (recomendado)
+ *   GOOGLE_GL / GOOGLE_HL     País e idioma de Google (por defecto mx / es)
  *   PORT                      Puerto (Render lo asigna solo)
  *   DOMAIN                    Si se define, solo responde a ese host
  *   CAPTIVE=1                 Modo portal cautivo (solo redes locales; requiere DOMAIN)
@@ -17,7 +19,7 @@ const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 const crypto = require('crypto');
-const { parseDuckHtml, parseDuckLite } = require('./lib/parse');
+const { parseDuckHtml, parseDuckLite, resolveUrl, clean } = require('./lib/parse');
 
 const int = (v, d) => { const n = parseInt(v, 10); return Number.isFinite(n) && n > 0 ? n : d; };
 const cfg = {
@@ -30,6 +32,10 @@ const cfg = {
   maxConcurrent: int(process.env.MAX_CONCURRENT_SEARCHES, 10),
   searchTimeout: int(process.env.SEARCH_TIMEOUT_MS, 8000),
   cacheTtl: int(process.env.CACHE_TTL_MS, 300_000),
+  serperKey: (process.env.SERPER_API_KEY || '').trim(),
+  serperUrl: process.env.SERPER_URL || 'https://google.serper.dev/search',
+  gl: process.env.GOOGLE_GL || 'mx',
+  hl: process.env.GOOGLE_HL || 'es',
 };
 
 const log = (o) => console.log(JSON.stringify({ t: new Date().toISOString(), ...o }));
@@ -98,11 +104,11 @@ const HDR = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
   'Accept-Language': 'es-MX,es;q=0.9,en;q=0.8',
 };
-async function fetchText(url) {
+async function fetchText(url, opts = {}) {
   const ac = new AbortController();
   const timer = setTimeout(() => ac.abort(), cfg.searchTimeout);
   try {
-    const r = await fetch(url, { headers: HDR, signal: ac.signal, redirect: 'follow' });
+    const r = await fetch(url, { headers: HDR, signal: ac.signal, redirect: 'follow', ...opts });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return (await r.text()).slice(0, 2_000_000);
   } finally { clearTimeout(timer); }
@@ -116,10 +122,26 @@ async function search(q) {
   if (hit && hit.exp > Date.now()) return hit.data;
 
   const enc = encodeURIComponent(q);
-  const providers = [
+  const providers = [];
+  if (cfg.serperKey) {
+    // Resultados reales de Google vía serper.dev
+    providers.push(async () => {
+      const txt = await fetchText(cfg.serperUrl, {
+        method: 'POST',
+        headers: { 'X-API-KEY': cfg.serperKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ q, gl: cfg.gl, hl: cfg.hl, num: 10 }),
+      });
+      const data = JSON.parse(txt);
+      return (Array.isArray(data.organic) ? data.organic : [])
+        .map((o) => ({ title: clean(String(o.title || '')).slice(0, 200), url: resolveUrl(String(o.link || '')), snippet: clean(String(o.snippet || '')).slice(0, 400) }))
+        .filter((o) => o.url && o.title)
+        .slice(0, 10);
+    });
+  }
+  providers.push(
     async () => parseDuckHtml(await fetchText('https://html.duckduckgo.com/html/?q=' + enc)),
     async () => parseDuckLite(await fetchText('https://lite.duckduckgo.com/lite/?q=' + enc)),
-  ];
+  );
   let results = [];
   let lastErr = null;
   for (const run of providers) {
@@ -187,7 +209,7 @@ server.headersTimeout = 66_000;
 server.requestTimeout = 15_000;
 server.maxHeadersCount = 50;
 
-server.listen(cfg.port, '0.0.0.0', () => log({ msg: 'Portal activo', port: cfg.port, domain: cfg.domain || '(cualquiera)', captive: cfg.captive }));
+server.listen(cfg.port, '0.0.0.0', () => log({ msg: 'Portal activo', port: cfg.port, buscador: cfg.serperKey ? 'Google (serper.dev)' : 'DuckDuckGo', domain: cfg.domain || '(cualquiera)', captive: cfg.captive }));
 
 /* ---------- Apagado limpio y red de seguridad ---------- */
 function shutdown(sig) {
