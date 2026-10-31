@@ -1,0 +1,10 @@
+{
+  "name": "portal-buscador",
+  "version": "2.0.0",
+  "description": "Portal con buscador, título de ciberseguridad y servidor robusto",
+  "main": "server.js",
+  "scripts": { "start": "node server.js", "test": "node test/parse.test.js" },
+  "engines": { "node": ">=18" },
+  "license": "UNLICENSED",
+  "private": true
+}
