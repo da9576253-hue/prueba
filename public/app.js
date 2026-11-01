@@ -1,6 +1,7 @@
 'use strict';
 /**
- * Lógica del Portal Buscador Google con VPN Web y DNS Cifrado
+ * Lógica del Portal Buscador Google con VPN Web Automática y DNS Cifrado
+ * Todo funciona de manera 100% automática al entrar a la URL en Render.
  */
 
 // Elementos del DOM
@@ -41,7 +42,7 @@ const openDnsGuideBtn = document.getElementById('open-dns-guide-btn');
 const footerPrivacyBtn = document.getElementById('footer-privacy-btn');
 const footerStatusBtn = document.getElementById('footer-status-btn');
 
-// Estado de la aplicación
+// Estado
 let activeCategory = 'all';
 let currentQuery = '';
 let searchAbortController = null;
@@ -55,7 +56,6 @@ let isStealthMode = false;
 const savedTheme = localStorage.getItem('google_portal_theme') || 'light';
 setTheme(savedTheme);
 
-// Rellenar dinámicamente la URL de DoH de nuestro sitio
 if (dohUrlField) {
   dohUrlField.value = `${window.location.origin}/api/dns-query`;
 }
@@ -76,7 +76,7 @@ themeToggle.addEventListener('click', () => {
   setTheme(isDark ? 'light' : 'dark');
 });
 
-/* ---------- Modo Camuflaje (Disfraz de Ciberseguridad) ---------- */
+/* ---------- Modo Camuflaje ---------- */
 stealthToggle.addEventListener('click', () => {
   isStealthMode = !isStealthMode;
   if (isStealthMode) {
@@ -88,7 +88,7 @@ stealthToggle.addEventListener('click', () => {
   }
 });
 
-/* ---------- Menú de Apps de Google ---------- */
+/* ---------- Menú de Apps ---------- */
 appsBtn.addEventListener('click', (e) => {
   e.stopPropagation();
   appsMenu.classList.toggle('show');
@@ -127,6 +127,17 @@ copyDohBtn.addEventListener('click', () => {
   });
 });
 
+/* ---------- Detección Inteligente de URL (Smart Omnibox) ---------- */
+function isDirectWebAddress(str) {
+  const s = str.trim();
+  if (/^https?:\/\//i.test(s)) return true;
+  // Dominios directos como "wikipedia.org", "marca.com", "noticias.es/art"
+  if (/^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+([\/?#].*)?$/i.test(s) && !s.includes(' ')) {
+    return true;
+  }
+  return false;
+}
+
 /* ---------- Entrada de búsqueda y botón limpiar ---------- */
 searchInput.addEventListener('input', () => {
   const val = searchInput.value.trim();
@@ -146,8 +157,11 @@ clearBtn.addEventListener('click', () => {
   searchInput.focus();
 });
 
-/* ---------- Autocompletado / Sugerencias en tiempo real ---------- */
+/* ---------- Autocompletado en tiempo real ---------- */
 function triggerSuggestions(query) {
+  if (isDirectWebAddress(query)) {
+    return hideSuggestions();
+  }
   clearTimeout(suggestDebounceTimer);
   suggestDebounceTimer = setTimeout(async () => {
     if (suggestAbortController) suggestAbortController.abort();
@@ -166,14 +180,14 @@ function triggerSuggestions(query) {
     } catch (e) {
       if (e.name !== 'AbortError') hideSuggestions();
     }
-  }, 120);
+  }, 110);
 }
 
 function renderSuggestions(list) {
   currentSuggestions = list;
   selectedSuggestionIndex = -1;
   suggestionsBox.innerHTML = '';
-  list.forEach((item, idx) => {
+  list.forEach((item) => {
     const div = document.createElement('div');
     div.className = 'suggestion-item';
     div.innerHTML = `
@@ -220,7 +234,7 @@ searchInput.addEventListener('keydown', (e) => {
       e.preventDefault();
       searchInput.value = currentSuggestions[selectedSuggestionIndex];
       hideSuggestions();
-      executeSearch(searchInput.value);
+      handleFormSubmit(searchInput.value);
     }
   }
 });
@@ -240,28 +254,48 @@ document.addEventListener('click', (e) => {
   if (!searchBoxWrap.contains(e.target)) hideSuggestions();
 });
 
-/* ---------- Envío de búsqueda ---------- */
+/* ---------- Envío Inteligente: Búsqueda o Navegación VPN Automática ---------- */
+function handleFormSubmit(rawQuery) {
+  const q = (rawQuery || searchInput.value || '').trim();
+  if (!q) return;
+  hideSuggestions();
+
+  // Si el usuario escribe una URL o dominio (ej: "elpais.com" o "https://..."),
+  // se abre AUTOMÁTICAMENTE a través de la VPN sin pasos intermedios.
+  if (isDirectWebAddress(q)) {
+    const targetUrl = /^https?:\/\//i.test(q) ? q : 'https://' + q;
+    window.location.href = `/proxy?url=${encodeURIComponent(targetUrl)}`;
+    return;
+  }
+
+  // De lo contrario, ejecuta búsqueda Google cifrada
+  executeSearch(q);
+}
+
 searchForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  hideSuggestions();
-  const q = searchInput.value.trim();
-  if (q) executeSearch(q);
+  handleFormSubmit();
 });
 
-// Botón "Me siento con suerte"
+// Botón "Me siento con suerte": Navega automáticamente al primer resultado en VPN
 btnLucky.addEventListener('click', async () => {
   const q = searchInput.value.trim();
   if (!q) return;
+  if (isDirectWebAddress(q)) {
+    return handleFormSubmit(q);
+  }
+  btnLucky.textContent = 'Navegando seguro…';
   try {
     const res = await fetch(`/api/search?q=${encodeURIComponent(q)}&category=all`);
     const data = await res.json();
     if (data.results && data.results.length) {
-      // Abre el primer resultado directamente a través del túnel VPN web
       window.location.href = data.results[0].proxyUrl || `/proxy?url=${encodeURIComponent(data.results[0].url)}`;
       return;
     }
   } catch {
     // Si falla, ejecuta búsqueda normal
+  } finally {
+    btnLucky.textContent = 'Me siento con suerte';
   }
   executeSearch(q);
 });
@@ -276,17 +310,21 @@ categoryTabs.querySelectorAll('.cat-tab:not(.proxy-tab)').forEach((tab) => {
   });
 });
 
-/* ---------- Ejecución y Renderizado de Búsqueda ---------- */
+/* ---------- Ejecución y Renderizado de Resultados Cifrados ---------- */
 async function executeSearch(query, category = activeCategory) {
   currentQuery = query;
   if (!isStealthMode) {
     document.title = `${query} - Buscar con Google`;
   }
 
+  // Actualizar historial de URL de forma limpia
+  const newUrl = `${window.location.pathname}?q=${encodeURIComponent(query)}`;
+  window.history.pushState({ q: query }, '', newUrl);
+
   // Activar vista de resultados
   document.body.classList.add('in-results');
   resultsView.classList.remove('hidden');
-  resultsContainer.innerHTML = '<div style="padding:20px 0;color:var(--text-muted);font-size:15px;">🔍 Buscando en red segura cifrada…</div>';
+  resultsContainer.innerHTML = '<div style="padding:24px 0;color:var(--text-muted);font-size:15px;">🔍 Buscando en red segura con DNS cifrado…</div>';
   searchStats.textContent = 'Cargando resultados a través del túnel VPN seguro…';
 
   if (searchAbortController) searchAbortController.abort();
@@ -303,7 +341,7 @@ async function executeSearch(query, category = activeCategory) {
       resultsContainer.innerHTML = `
         <div style="padding:24px 0;">
           <h3 style="color:#ea4335;margin-bottom:8px;">No se pudo realizar la búsqueda</h3>
-          <p style="color:var(--text-sub);">${escapeHtml(data.error || 'Error de conexión con el proveedor de búsqueda.')}</p>
+          <p style="color:var(--text-sub);">${escapeHtml(data.error || 'Error de conexión con el proveedor.')}</p>
         </div>`;
       return;
     }
@@ -311,16 +349,16 @@ async function executeSearch(query, category = activeCategory) {
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
     const results = Array.isArray(data.results) ? data.results : [];
 
-    searchStats.textContent = `Cerca de ${results.length * 1420} resultados (${duration} segundos) • 🛡️ Conexión cifrada vía túnel VPN & DoH`;
+    searchStats.textContent = `Cerca de ${results.length * 1530} resultados (${duration} segundos) • 🛡️ Conexión cifrada vía túnel VPN & DoH`;
 
     if (!results.length) {
       resultsContainer.innerHTML = `
         <div style="padding:24px 0;">
           <p style="color:var(--text-main);font-size:16px;margin-bottom:12px;">No se han encontrado resultados para <strong>${escapeHtml(query)}</strong>.</p>
           <ul style="color:var(--text-sub);font-size:14px;padding-left:20px;line-height:1.6;">
-            <li>Asegúrate de que todas las palabras estén escritas correctamente.</li>
-            <li>Prueba con otras palabras clave o términos más generales.</li>
-            <li>Prueba a buscar navegando con la <a href="/proxy" style="color:var(--link-color);">VPN Web directa</a>.</li>
+            <li>Verifica que no haya faltas de ortografía.</li>
+            <li>Prueba con palabras más comunes.</li>
+            <li>Prueba a navegar directamente con la <a href="/proxy" style="color:var(--link-color);">VPN Web</a>.</li>
           </ul>
         </div>`;
       paginationBox.classList.add('hidden');
@@ -347,6 +385,7 @@ function renderResults(results) {
     card.className = 'result-card';
 
     const safeUrl = item.url;
+    // Por defecto, cada clic navega AUTOMÁTICAMENTE a través de la VPN segura
     const proxyUrl = item.proxyUrl || `/proxy?url=${encodeURIComponent(safeUrl)}`;
     const domain = item.domain || extractHost(safeUrl);
     const faviconUrl = item.favicon || `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
@@ -355,12 +394,12 @@ function renderResults(results) {
       <div class="result-meta">
         <img class="result-favicon" src="${escapeHtml(faviconUrl)}" alt="" onerror="this.style.display='none'">
         <div class="result-source-box">
-          <span class="result-site-name">${escapeHtml(domain || 'Sitio web')}</span>
+          <span class="result-site-name">${escapeHtml(domain || 'Sitio')}</span>
           <span class="result-breadcrumb">${escapeHtml(safeUrl)}</span>
         </div>
       </div>
       <h3 class="result-title">
-        <a href="${escapeHtml(proxyUrl)}" title="Abrir de forma segura en VPN">${escapeHtml(item.title)}</a>
+        <a href="${escapeHtml(proxyUrl)}" title="Navegar seguro mediante el túnel VPN">${escapeHtml(item.title)}</a>
       </h3>
       <p class="result-snippet">${escapeHtml(item.snippet || '')}</p>
       <div class="result-actions">
@@ -368,7 +407,7 @@ function renderResults(results) {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
           Navegar Seguro (VPN Web)
         </a>
-        <a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" class="direct-link-btn" title="Abrir enlace original en pestaña nueva">
+        <a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" class="direct-link-btn" title="Abrir enlace original directo en pestaña externa">
           Enlace Directo ↗
         </a>
       </div>
@@ -395,7 +434,7 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-/* ---------- Regresar al inicio al hacer clic en Google ---------- */
+/* ---------- Regresar al inicio ---------- */
 if (homeLink) {
   homeLink.addEventListener('click', (e) => {
     e.preventDefault();
@@ -414,10 +453,11 @@ function resetToHome() {
   clearBtn.classList.add('hidden');
   hideSuggestions();
   if (!isStealthMode) document.title = 'Google';
+  window.history.pushState({}, '', '/');
   searchInput.focus();
 }
 
-/* ---------- Reconocimiento de voz / Micrófono ---------- */
+/* ---------- Búsqueda por Voz y Lens ---------- */
 micBtn.addEventListener('click', () => {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (SpeechRecognition) {
@@ -429,24 +469,36 @@ micBtn.addEventListener('click', () => {
       const transcript = evt.results[0][0].transcript;
       searchInput.value = transcript;
       searchInput.placeholder = '';
-      executeSearch(transcript);
+      handleFormSubmit(transcript);
     };
-    recognition.onerror = () => {
-      searchInput.placeholder = '';
-    };
-    recognition.onend = () => {
-      searchInput.placeholder = '';
-    };
+    recognition.onerror = () => { searchInput.placeholder = ''; };
+    recognition.onend = () => { searchInput.placeholder = ''; };
   } else {
-    alert('Búsqueda por voz activa. Escribe tu consulta en el buscador.');
+    alert('Reconocimiento de voz listo. Escribe tu búsqueda en la barra.');
   }
 });
 
-/* ---------- Google Lens ---------- */
 lensBtn.addEventListener('click', () => {
-  const imgUrl = prompt('Introduce la URL de una imagen para buscarla o analizarla:');
+  const imgUrl = prompt('Introduce la URL de una imagen o sitio para analizar en la VPN:');
   if (imgUrl && imgUrl.trim()) {
-    searchInput.value = imgUrl.trim();
-    executeSearch(imgUrl.trim(), 'images');
+    handleFormSubmit(imgUrl.trim());
+  }
+});
+
+/* ---------- INICIO AUTOMÁTICO AL ENTRAR A LA URL DE RENDER ---------- */
+window.addEventListener('DOMContentLoaded', () => {
+  searchInput.focus();
+
+  // Si el usuario entra con ?q=algo (por ejemplo, configurado como buscador en el navegador)
+  const urlParams = new URLSearchParams(window.location.search);
+  const qParam = urlParams.get('q');
+  const targetUrlParam = urlParams.get('url');
+
+  if (targetUrlParam) {
+    window.location.href = `/proxy?url=${encodeURIComponent(targetUrlParam)}`;
+  } else if (qParam) {
+    searchInput.value = qParam;
+    clearBtn.classList.remove('hidden');
+    handleFormSubmit(qParam);
   }
 });

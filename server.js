@@ -483,6 +483,15 @@ server.listen(cfg.port, '0.0.0.0', () => {
     buscador: cfg.serperKey ? 'Google (serper.dev)' : 'DuckDuckGo Fallback',
     domain: cfg.domain || '(cualquiera)',
   });
+
+  // Mantenimiento activo automático en Render (Anti-Sleep)
+  const renderUrl = process.env.RENDER_EXTERNAL_URL;
+  if (renderUrl) {
+    log({ msg: 'Render Anti-Sleep keepalive activado', target: renderUrl });
+    setInterval(() => {
+      fetch(`${renderUrl}/healthz`).catch(() => {});
+    }, 14 * 60_000).unref();
+  }
 });
 
 function shutdown(sig) {
