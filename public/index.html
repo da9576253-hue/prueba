@@ -11,27 +11,51 @@
   <!-- ENCABEZADO SUPERIOR -->
   <header id="top-header">
     <div class="header-left">
-      <a href="/" class="header-link" id="home-link" title="Inicio de Google">Google</a>
+      <!-- Logo Google en el encabezado -->
+      <a href="/" class="header-logo" id="home-link" title="Ir al inicio de Google">
+        <span class="logo-g g-blue">G</span><span class="logo-o o-red">o</span><span class="logo-o o-yellow">o</span><span class="logo-g g-blue">g</span><span class="logo-l l-green">l</span><span class="logo-e e-red">e</span>
+      </a>
+
+      <!-- Barra de búsqueda superior en modo resultados -->
+      <div id="header-search-wrap" class="header-search-wrap hidden">
+        <form id="header-search-form" autocomplete="off">
+          <div class="header-search-box">
+            <input type="text" id="header-search-input" placeholder="Buscar con Google o ingresar URL…" spellcheck="false" autocomplete="off" aria-label="Buscar">
+            <button type="button" id="header-clear-btn" class="clear-btn hidden" title="Borrar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#70757a"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+            <div class="header-mic-btn" id="header-mic-btn" title="Búsqueda por voz">
+              <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path fill="#34A853" d="M11 18.92h2V22h-2z"/><path fill="#F4B400" d="M7 11H5c0 3.53 2.61 6.43 6 6.92v-2.04c-2.28-.46-4-2.48-4-4.88z"/><path fill="#EA4335" d="M19 11c0 2.4-1.72 4.42-4 4.88v2.04c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </div>
+            <button type="submit" class="header-submit-btn" title="Buscar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#4285F4"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Píldora de estado de red -->
       <span class="vpn-status-pill" id="vpn-status-btn" title="Ver estado del Túnel VPN y DNS">
         <span class="status-dot"></span>
         <span class="status-text">VPN & DNS Seguro</span>
       </span>
     </div>
+
     <div class="header-right">
       <a href="/proxy?url=https%3A%2F%2Fmail.google.com" target="_blank" rel="noopener noreferrer" class="header-link">Gmail</a>
       <button type="button" class="header-link" id="nav-images-btn">Imágenes</button>
       
       <!-- Botón Modo Camuflaje -->
-      <button type="button" class="icon-btn" id="stealth-toggle" title="Modo Camuflaje (Disfraz CiberSeguridad)">
+      <button type="button" class="icon-btn" id="stealth-toggle" title="Modo Camuflaje">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l7 3.12v4.7c0 4.54-3.14 8.78-7 9.88-3.86-1.1-7-5.34-7-9.88v-4.7l7-3.12z"/></svg>
       </button>
 
       <!-- Botón Tema Claro / Oscuro -->
-      <button type="button" class="icon-btn" id="theme-toggle" title="Cambiar tema (Claro / Oscuro)">
+      <button type="button" class="icon-btn" id="theme-toggle" title="Cambiar tema">
         <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
       </button>
 
-      <!-- Menú de Apps de Google (9 puntos) -->
+      <!-- Menú de Apps de Google -->
       <div class="dropdown-wrap">
         <button type="button" class="icon-btn" id="apps-btn" title="Aplicaciones Seguras">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM6 4c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
@@ -48,7 +72,7 @@
         </div>
       </div>
 
-      <!-- Avatar de Usuario / Escudo -->
+      <!-- Avatar -->
       <button type="button" class="user-avatar" id="avatar-btn" title="Centro de Seguridad">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="#ffffff"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
       </button>
@@ -59,7 +83,7 @@
   <main id="main-container">
     <!-- VISTA INICIO (GOOGLE HOME) -->
     <section id="home-view">
-      <!-- LOGO OFICIAL DE GOOGLE -->
+      <!-- LOGO DE GOOGLE GRANDE EN INICIO -->
       <div class="google-logo-wrap" id="logo-main">
         <span class="logo-g g-blue">G</span>
         <span class="logo-o o-red">o</span>
@@ -69,37 +93,31 @@
         <span class="logo-e e-red">e</span>
       </div>
 
-      <!-- BARRA DE BÚSQUEDA GOOGLE -->
+      <!-- BARRA DE BÚSQUEDA GOOGLE INICIO -->
       <div class="search-box-wrap">
         <form id="search-form" autocomplete="off">
           <div class="search-input-box">
-            <!-- Icono Lupa Izquierda -->
             <div class="search-icon-left">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="#9aa0a6"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
             </div>
             
             <input type="text" id="search-input" placeholder="" autofocus spellcheck="false" autocomplete="off" aria-label="Buscar">
 
-            <!-- Botón Borrar 'X' -->
             <button type="button" id="clear-btn" class="clear-btn hidden" title="Borrar">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="#70757a"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
             </button>
 
-            <!-- Micrófono Oficial Google -->
             <div class="mic-btn" id="mic-btn" title="Búsqueda por voz">
               <svg width="24" height="24" viewBox="0 0 24 24"><path fill="#4285F4" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path fill="#34A853" d="M11 18.92h2V22h-2z"/><path fill="#F4B400" d="M7 11H5c0 3.53 2.61 6.43 6 6.92v-2.04c-2.28-.46-4-2.48-4-4.88z"/><path fill="#EA4335" d="M19 11c0 2.4-1.72 4.42-4 4.88v2.04c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
             </div>
 
-            <!-- Google Lens Oficial -->
             <div class="lens-btn" id="lens-btn" title="Buscar por imagen">
               <svg width="24" height="24" viewBox="0 0 24 24"><path fill="#4285F4" d="M5 3h4v2H5v4H3V5c0-1.1.9-2 2-2zm14 0c1.1 0 2 .9 2 2v4h-2V5h-4V3h4zM5 21c-1.1 0-2-.9-2-2v-4h2v4h4v2H5zm14 0h-4v-2h4v-4h2v4c0 1.1-.9 2-2 2z"/><path fill="#EA4335" d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/></svg>
             </div>
           </div>
 
-          <!-- DROPDOWN DE AUTOCOMPLETADO EN TIEMPO REAL -->
           <div id="suggestions-box" class="suggestions-box hidden"></div>
 
-          <!-- BOTONES DE ACCIÓN DE GOOGLE -->
           <div class="home-buttons">
             <button type="submit" class="g-btn" id="btn-search">Buscar con Google</button>
             <button type="button" class="g-btn" id="btn-lucky">Me siento con suerte</button>
@@ -107,7 +125,6 @@
         </form>
       </div>
 
-      <!-- AVISO DE PRIVACIDAD Y CIFRADO DEL MUNDO -->
       <div class="security-banner-home">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="#34A853"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
         <span>Búsqueda Blindada: Conexión Cifrada TLS • DNS Seguro DoH • Modo VPN Web</span>
@@ -138,7 +155,7 @@
 
       <!-- ESTADÍSTICAS DE BÚSQUEDA -->
       <div class="search-stats" id="search-stats">
-        Cerca de 1,240,000 resultados (0.21 segundos) • 🛡️ Tráfico cifrado y anónimo
+        Cargando resultados seguros…
       </div>
 
       <!-- CONTENEDOR DE RESULTADOS ORGÁNICOS -->
@@ -186,7 +203,7 @@
           <div class="status-item">
             <span class="status-badge-ok">ACTIVO</span>
             <h4>Túnel VPN Web</h4>
-            <p>Al hacer clic en "Navegar Seguro", el servidor actúa como un proxy cifrado intermedio. Tu IP real nunca llega al sitio destino y tu proveedor de internet (ISP) no ve la web que visitas.</p>
+            <p>Al hacer clic en cualquier resultado, el servidor actúa como un proxy cifrado intermedio. Tu IP real nunca llega al sitio destino y tu proveedor de internet (ISP) no ve la web que visitas.</p>
           </div>
           <div class="status-item">
             <span class="status-badge-ok">ACTIVO</span>

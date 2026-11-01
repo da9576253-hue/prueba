@@ -4,7 +4,7 @@
  * Todo funciona de manera 100% automática al entrar a la URL en Render.
  */
 
-// Elementos del DOM
+// Elementos del DOM - Home
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
 const clearBtn = document.getElementById('clear-btn');
@@ -18,6 +18,13 @@ const categoryTabs = document.getElementById('category-tabs');
 const paginationBox = document.getElementById('pagination-box');
 const logoMain = document.getElementById('logo-main');
 const homeLink = document.getElementById('home-link');
+
+// Elementos del DOM - Header Search (Modo Resultados)
+const headerSearchWrap = document.getElementById('header-search-wrap');
+const headerSearchForm = document.getElementById('header-search-form');
+const headerSearchInput = document.getElementById('header-search-input');
+const headerClearBtn = document.getElementById('header-clear-btn');
+const headerMicBtn = document.getElementById('header-mic-btn');
 
 // Botones y Controles
 const btnSearch = document.getElementById('btn-search');
@@ -131,14 +138,13 @@ copyDohBtn.addEventListener('click', () => {
 function isDirectWebAddress(str) {
   const s = str.trim();
   if (/^https?:\/\//i.test(s)) return true;
-  // Dominios directos como "wikipedia.org", "marca.com", "noticias.es/art"
   if (/^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+([\/?#].*)?$/i.test(s) && !s.includes(' ')) {
     return true;
   }
   return false;
 }
 
-/* ---------- Entrada de búsqueda y botón limpiar ---------- */
+/* ---------- Entrada de búsqueda Home ---------- */
 searchInput.addEventListener('input', () => {
   const val = searchInput.value.trim();
   if (val) {
@@ -156,6 +162,32 @@ clearBtn.addEventListener('click', () => {
   hideSuggestions();
   searchInput.focus();
 });
+
+/* ---------- Entrada de búsqueda Header (Resultados) ---------- */
+if (headerSearchInput) {
+  headerSearchInput.addEventListener('input', () => {
+    const val = headerSearchInput.value.trim();
+    if (headerClearBtn) {
+      headerClearBtn.classList.toggle('hidden', !val);
+    }
+  });
+}
+if (headerClearBtn) {
+  headerClearBtn.addEventListener('click', () => {
+    headerSearchInput.value = '';
+    headerClearBtn.classList.add('hidden');
+    headerSearchInput.focus();
+  });
+}
+if (headerSearchForm) {
+  headerSearchForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    handleFormSubmit(headerSearchInput.value);
+  });
+}
+if (headerMicBtn) {
+  headerMicBtn.addEventListener('click', () => micBtn.click());
+}
 
 /* ---------- Autocompletado en tiempo real ---------- */
 function triggerSuggestions(query) {
@@ -256,19 +288,16 @@ document.addEventListener('click', (e) => {
 
 /* ---------- Envío Inteligente: Búsqueda o Navegación VPN Automática ---------- */
 function handleFormSubmit(rawQuery) {
-  const q = (rawQuery || searchInput.value || '').trim();
+  const q = (rawQuery || searchInput.value || headerSearchInput.value || '').trim();
   if (!q) return;
   hideSuggestions();
 
-  // Si el usuario escribe una URL o dominio (ej: "elpais.com" o "https://..."),
-  // se abre AUTOMÁTICAMENTE a través de la VPN sin pasos intermedios.
   if (isDirectWebAddress(q)) {
     const targetUrl = /^https?:\/\//i.test(q) ? q : 'https://' + q;
     window.location.href = `/proxy?url=${encodeURIComponent(targetUrl)}`;
     return;
   }
 
-  // De lo contrario, ejecuta búsqueda Google cifrada
   executeSearch(q);
 }
 
@@ -277,7 +306,7 @@ searchForm.addEventListener('submit', (e) => {
   handleFormSubmit();
 });
 
-// Botón "Me siento con suerte": Navega automáticamente al primer resultado en VPN
+// Botón "Me siento con suerte"
 btnLucky.addEventListener('click', async () => {
   const q = searchInput.value.trim();
   if (!q) return;
@@ -293,7 +322,6 @@ btnLucky.addEventListener('click', async () => {
       return;
     }
   } catch {
-    // Si falla, ejecuta búsqueda normal
   } finally {
     btnLucky.textContent = 'Me siento con suerte';
   }
@@ -317,15 +345,23 @@ async function executeSearch(query, category = activeCategory) {
     document.title = `${query} - Buscar con Google`;
   }
 
-  // Actualizar historial de URL de forma limpia
+  // Sincronizar ambos campos de texto
+  searchInput.value = query;
+  if (headerSearchInput) {
+    headerSearchInput.value = query;
+    if (headerClearBtn) headerClearBtn.classList.remove('hidden');
+  }
+
   const newUrl = `${window.location.pathname}?q=${encodeURIComponent(query)}`;
   window.history.pushState({ q: query }, '', newUrl);
 
   // Activar vista de resultados
   document.body.classList.add('in-results');
   resultsView.classList.remove('hidden');
-  resultsContainer.innerHTML = '<div style="padding:24px 0;color:var(--text-muted);font-size:15px;">🔍 Buscando en red segura con DNS cifrado…</div>';
-  searchStats.textContent = 'Cargando resultados a través del túnel VPN seguro…';
+  if (headerSearchWrap) headerSearchWrap.classList.remove('hidden');
+
+  resultsContainer.innerHTML = '<div style="padding:24px 0;color:var(--text-muted);font-size:15px;">🔍 Conectando con red segura y resolviendo DNS…</div>';
+  searchStats.textContent = 'Buscando en motores web cifrados…';
 
   if (searchAbortController) searchAbortController.abort();
   searchAbortController = new AbortController();
@@ -337,19 +373,10 @@ async function executeSearch(query, category = activeCategory) {
     });
     const data = await res.json().catch(() => ({}));
 
-    if (!res.ok) {
-      resultsContainer.innerHTML = `
-        <div style="padding:24px 0;">
-          <h3 style="color:#ea4335;margin-bottom:8px;">No se pudo realizar la búsqueda</h3>
-          <p style="color:var(--text-sub);">${escapeHtml(data.error || 'Error de conexión con el proveedor.')}</p>
-        </div>`;
-      return;
-    }
-
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
     const results = Array.isArray(data.results) ? data.results : [];
 
-    searchStats.textContent = `Cerca de ${results.length * 1530} resultados (${duration} segundos) • 🛡️ Conexión cifrada vía túnel VPN & DoH`;
+    searchStats.textContent = `Cerca de ${Math.max(results.length * 1530, 14200)} resultados (${duration} segundos) • 🛡️ Conexión cifrada vía túnel VPN & DoH`;
 
     if (!results.length) {
       resultsContainer.innerHTML = `
@@ -385,7 +412,6 @@ function renderResults(results) {
     card.className = 'result-card';
 
     const safeUrl = item.url;
-    // Por defecto, cada clic navega AUTOMÁTICAMENTE a través de la VPN segura
     const proxyUrl = item.proxyUrl || `/proxy?url=${encodeURIComponent(safeUrl)}`;
     const domain = item.domain || extractHost(safeUrl);
     const faviconUrl = item.favicon || `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
@@ -448,9 +474,12 @@ if (logoMain) {
 function resetToHome() {
   document.body.classList.remove('in-results');
   resultsView.classList.add('hidden');
+  if (headerSearchWrap) headerSearchWrap.classList.add('hidden');
   resultsContainer.innerHTML = '';
   searchInput.value = '';
+  if (headerSearchInput) headerSearchInput.value = '';
   clearBtn.classList.add('hidden');
+  if (headerClearBtn) headerClearBtn.classList.add('hidden');
   hideSuggestions();
   if (!isStealthMode) document.title = 'Google';
   window.history.pushState({}, '', '/');
@@ -468,6 +497,7 @@ micBtn.addEventListener('click', () => {
     recognition.onresult = (evt) => {
       const transcript = evt.results[0][0].transcript;
       searchInput.value = transcript;
+      if (headerSearchInput) headerSearchInput.value = transcript;
       searchInput.placeholder = '';
       handleFormSubmit(transcript);
     };
@@ -487,9 +517,6 @@ lensBtn.addEventListener('click', () => {
 
 /* ---------- INICIO AUTOMÁTICO AL ENTRAR A LA URL DE RENDER ---------- */
 window.addEventListener('DOMContentLoaded', () => {
-  searchInput.focus();
-
-  // Si el usuario entra con ?q=algo (por ejemplo, configurado como buscador en el navegador)
   const urlParams = new URLSearchParams(window.location.search);
   const qParam = urlParams.get('q');
   const targetUrlParam = urlParams.get('url');
@@ -498,7 +525,10 @@ window.addEventListener('DOMContentLoaded', () => {
     window.location.href = `/proxy?url=${encodeURIComponent(targetUrlParam)}`;
   } else if (qParam) {
     searchInput.value = qParam;
+    if (headerSearchInput) headerSearchInput.value = qParam;
     clearBtn.classList.remove('hidden');
     handleFormSubmit(qParam);
+  } else {
+    searchInput.focus();
   }
 });
