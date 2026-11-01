@@ -1,140 +1,184 @@
 'use strict';
 /**
- * Lógica del Portal Buscador Google con VPN Web Automática y DNS Cifrado
- * Todo funciona de manera 100% automática al entrar a la URL en Render.
+ * Motor del Navegador Mozilla Firefox Web
+ * Administra pestañas, historial, barra de direcciones omnibox, navegación
+ * a través del túnel VPN y protección contra rastreo con DNS DoH.
  */
 
-// Elementos del DOM - Home
-const searchForm = document.getElementById('search-form');
-const searchInput = document.getElementById('search-input');
-const clearBtn = document.getElementById('clear-btn');
-const suggestionsBox = document.getElementById('suggestions-box');
-const searchBoxWrap = document.querySelector('.search-box-wrap');
-const homeView = document.getElementById('home-view');
-const resultsView = document.getElementById('results-view');
-const resultsContainer = document.getElementById('results-container');
-const searchStats = document.getElementById('search-stats');
-const categoryTabs = document.getElementById('category-tabs');
-const paginationBox = document.getElementById('pagination-box');
-const logoMain = document.getElementById('logo-main');
-const homeLink = document.getElementById('home-link');
+// Elementos del DOM
+const tabsContainer = document.getElementById('tabs-container');
+const newTabBtn = document.getElementById('new-tab-btn');
+const navBackBtn = document.getElementById('nav-back-btn');
+const navForwardBtn = document.getElementById('nav-forward-btn');
+const navReloadBtn = document.getElementById('nav-reload-btn');
+const navHomeBtn = document.getElementById('nav-home-btn');
+const addressForm = document.getElementById('firefox-address-form');
+const addressInput = document.getElementById('firefox-address-input');
+const addressClearBtn = document.getElementById('address-clear-btn');
+const shieldBtn = document.getElementById('firefox-shield-btn');
+const shieldPopup = document.getElementById('shield-popup');
+const shieldCloseBtn = document.getElementById('shield-close-btn');
+const homePage = document.getElementById('firefox-home-page');
+const homeSearchForm = document.getElementById('home-search-form');
+const homeSearchInput = document.getElementById('home-search-input');
+const webFramesContainer = document.getElementById('web-frames-container');
+const themeBtn = document.getElementById('theme-btn');
 
-// Elementos del DOM - Header Search (Modo Resultados)
-const headerSearchWrap = document.getElementById('header-search-wrap');
-const headerSearchForm = document.getElementById('header-search-form');
-const headerSearchInput = document.getElementById('header-search-input');
-const headerClearBtn = document.getElementById('header-clear-btn');
-const headerMicBtn = document.getElementById('header-mic-btn');
+// Estado del Navegador
+let tabIdCounter = 1;
+let activeTabId = 1;
+const tabs = new Map(); // id -> { id, url, title, favicon, isHome }
 
-// Botones y Controles
-const btnSearch = document.getElementById('btn-search');
-const btnLucky = document.getElementById('btn-lucky');
-const themeToggle = document.getElementById('theme-toggle');
-const stealthToggle = document.getElementById('stealth-toggle');
-const appsBtn = document.getElementById('apps-btn');
-const appsMenu = document.getElementById('apps-menu');
-const vpnStatusBtn = document.getElementById('vpn-status-btn');
-const avatarBtn = document.getElementById('avatar-btn');
-const micBtn = document.getElementById('mic-btn');
-const lensBtn = document.getElementById('lens-btn');
-
-// Modal de Seguridad
-const securityModal = document.getElementById('security-modal');
-const modalCloseBtn = document.getElementById('modal-close-btn');
-const modalOkBtn = document.getElementById('modal-ok-btn');
-const dohUrlField = document.getElementById('doh-url-field');
-const copyDohBtn = document.getElementById('copy-doh-btn');
-const openVpnModalBtn = document.getElementById('open-vpn-modal-btn');
-const openDnsGuideBtn = document.getElementById('open-dns-guide-btn');
-const footerPrivacyBtn = document.getElementById('footer-privacy-btn');
-const footerStatusBtn = document.getElementById('footer-status-btn');
-
-// Estado
-let activeCategory = 'all';
-let currentQuery = '';
-let searchAbortController = null;
-let suggestAbortController = null;
-let suggestDebounceTimer = null;
-let selectedSuggestionIndex = -1;
-let currentSuggestions = [];
-let isStealthMode = false;
-
-/* ---------- Inicialización de tema y DoH URL ---------- */
-const savedTheme = localStorage.getItem('google_portal_theme') || 'light';
-setTheme(savedTheme);
-
-if (dohUrlField) {
-  dohUrlField.value = `${window.location.origin}/api/dns-query`;
-}
-
-function setTheme(theme) {
-  if (theme === 'dark') {
-    document.body.classList.add('theme-dark');
-    document.body.classList.remove('theme-light');
-  } else {
-    document.body.classList.add('theme-light');
-    document.body.classList.remove('theme-dark');
-  }
-  localStorage.setItem('google_portal_theme', theme);
-}
-
-themeToggle.addEventListener('click', () => {
-  const isDark = document.body.classList.contains('theme-dark');
-  setTheme(isDark ? 'light' : 'dark');
+/* ---------- Inicialización de la Pestaña Inicial ---------- */
+tabs.set(1, {
+  id: 1,
+  url: '',
+  title: 'Nueva pestaña',
+  favicon: '🦊',
+  isHome: true,
 });
 
-/* ---------- Modo Camuflaje ---------- */
-stealthToggle.addEventListener('click', () => {
-  isStealthMode = !isStealthMode;
-  if (isStealthMode) {
-    document.title = 'Ciberseguridad | Centro de Seguridad de Red';
-    stealthToggle.style.color = '#34a853';
-  } else {
-    document.title = currentQuery ? `${currentQuery} - Buscar con Google` : 'Google';
-    stealthToggle.style.color = '';
-  }
+/* ---------- Cambio de Tema ---------- */
+themeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('firefox-theme-light');
+  document.body.classList.toggle('firefox-theme-dark');
 });
 
-/* ---------- Menú de Apps ---------- */
-appsBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  appsMenu.classList.toggle('show');
-});
-document.addEventListener('click', (e) => {
-  if (!appsMenu.contains(e.target) && e.target !== appsBtn) {
-    appsMenu.classList.remove('show');
-  }
-});
+/* ---------- Sistema de Pestañas de Firefox ---------- */
+function createTab(initialUrl = '') {
+  tabIdCounter++;
+  const id = tabIdCounter;
+  const newTab = {
+    id,
+    url: initialUrl,
+    title: initialUrl ? extractHost(initialUrl) : 'Nueva pestaña',
+    favicon: initialUrl ? '🌐' : '🦊',
+    isHome: !initialUrl,
+  };
+  tabs.set(id, newTab);
 
-/* ---------- Modal de Seguridad y DNS ---------- */
-function openSecurityModal() {
-  securityModal.classList.remove('hidden');
-}
-function closeSecurityModal() {
-  securityModal.classList.add('hidden');
-}
+  // Crear elemento en la barra de pestañas
+  const tabEl = document.createElement('div');
+  tabEl.className = 'firefox-tab';
+  tabEl.dataset.tabId = id;
+  tabEl.innerHTML = `
+    <span class="tab-favicon">${newTab.favicon}</span>
+    <span class="tab-title">${escapeHtml(newTab.title)}</span>
+    <button type="button" class="tab-close-btn" title="Cerrar pestaña">&times;</button>
+  `;
 
-vpnStatusBtn.addEventListener('click', openSecurityModal);
-avatarBtn.addEventListener('click', openSecurityModal);
-if (openVpnModalBtn) openVpnModalBtn.addEventListener('click', openSecurityModal);
-if (openDnsGuideBtn) openDnsGuideBtn.addEventListener('click', openSecurityModal);
-if (footerPrivacyBtn) footerPrivacyBtn.addEventListener('click', openSecurityModal);
-if (footerStatusBtn) footerStatusBtn.addEventListener('click', openSecurityModal);
-modalCloseBtn.addEventListener('click', closeSecurityModal);
-modalOkBtn.addEventListener('click', closeSecurityModal);
-securityModal.addEventListener('click', (e) => {
-  if (e.target === securityModal) closeSecurityModal();
-});
-
-copyDohBtn.addEventListener('click', () => {
-  dohUrlField.select();
-  navigator.clipboard.writeText(dohUrlField.value).then(() => {
-    copyDohBtn.textContent = '¡Copiado!';
-    setTimeout(() => { copyDohBtn.textContent = 'Copiar URL DoH'; }, 2000);
+  tabEl.addEventListener('click', (e) => {
+    if (e.target.classList.contains('tab-close-btn')) {
+      e.stopPropagation();
+      closeTab(id);
+    } else {
+      switchTab(id);
+    }
   });
+
+  tabsContainer.appendChild(tabEl);
+
+  // Crear iframe asociado para la pestaña
+  const iframe = document.createElement('iframe');
+  iframe.className = 'web-frame';
+  iframe.id = `frame-tab-${id}`;
+  webFramesContainer.appendChild(iframe);
+
+  switchTab(id);
+
+  if (initialUrl) {
+    navigateTo(initialUrl, id);
+  }
+}
+
+function switchTab(id) {
+  if (!tabs.has(id)) return;
+  activeTabId = id;
+  const tabData = tabs.get(id);
+
+  // Actualizar pestañas en la barra
+  document.querySelectorAll('.firefox-tab').forEach((el) => {
+    el.classList.toggle('active', parseInt(el.dataset.tabId, 10) === id);
+  });
+
+  // Mostrar el iframe correspondiente o la página de inicio
+  document.querySelectorAll('.web-frame').forEach((frame) => {
+    frame.classList.remove('active');
+  });
+
+  if (tabData.isHome) {
+    homePage.classList.remove('hidden');
+    addressInput.value = '';
+    addressClearBtn.classList.add('hidden');
+    homeSearchInput.value = '';
+    homeSearchInput.focus();
+  } else {
+    homePage.classList.add('hidden');
+    const activeFrame = document.getElementById(`frame-tab-${id}`);
+    if (activeFrame) {
+      activeFrame.classList.add('active');
+    }
+    addressInput.value = tabData.url;
+    addressClearBtn.classList.remove('hidden');
+  }
+}
+
+function closeTab(id) {
+  if (tabs.size <= 1) {
+    // Si es la última pestaña, reiniciarla a Nueva Pestaña
+    const singleTab = tabs.get(id);
+    singleTab.url = '';
+    singleTab.title = 'Nueva pestaña';
+    singleTab.favicon = '🦊';
+    singleTab.isHome = true;
+    updateTabUI(id);
+    switchTab(id);
+    const frame = document.getElementById(`frame-tab-${id}`);
+    if (frame) frame.src = 'about:blank';
+    return;
+  }
+
+  // Eliminar iframe y pestaña
+  const tabEl = document.querySelector(`.firefox-tab[data-tab-id="${id}"]`);
+  if (tabEl) tabEl.remove();
+  const frameEl = document.getElementById(`frame-tab-${id}`);
+  if (frameEl) frameEl.remove();
+
+  tabs.delete(id);
+
+  // Si cerramos la pestaña activa, cambiar a la última abierta
+  if (activeTabId === id) {
+    const remainingIds = Array.from(tabs.keys());
+    switchTab(remainingIds[remainingIds.length - 1]);
+  }
+}
+
+function updateTabUI(id) {
+  const tabData = tabs.get(id);
+  if (!tabData) return;
+  const tabEl = document.querySelector(`.firefox-tab[data-tab-id="${id}"]`);
+  if (tabEl) {
+    tabEl.querySelector('.tab-favicon').textContent = tabData.favicon;
+    tabEl.querySelector('.tab-title').textContent = tabData.title;
+  }
+  if (activeTabId === id) {
+    document.title = `${tabData.title} — Mozilla Firefox`;
+  }
+}
+
+newTabBtn.addEventListener('click', () => createTab());
+
+// Click en la primera pestaña inicial
+document.querySelector('.firefox-tab').addEventListener('click', (e) => {
+  if (e.target.classList.contains('tab-close-btn')) {
+    e.stopPropagation();
+    closeTab(1);
+  } else {
+    switchTab(1);
+  }
 });
 
-/* ---------- Detección Inteligente de URL (Smart Omnibox) ---------- */
+/* ---------- Navegación Inteligente (URLs y Búsquedas) ---------- */
 function isDirectWebAddress(str) {
   const s = str.trim();
   if (/^https?:\/\//i.test(s)) return true;
@@ -144,305 +188,143 @@ function isDirectWebAddress(str) {
   return false;
 }
 
-/* ---------- Entrada de búsqueda Home ---------- */
-searchInput.addEventListener('input', () => {
-  const val = searchInput.value.trim();
-  if (val) {
-    clearBtn.classList.remove('hidden');
-    triggerSuggestions(val);
+function navigateTo(queryOrUrl, targetTabId = activeTabId) {
+  const q = queryOrUrl.trim();
+  if (!q) return;
+
+  const tabData = tabs.get(targetTabId);
+  if (!tabData) return;
+
+  let finalTargetUrl = '';
+
+  if (isDirectWebAddress(q)) {
+    finalTargetUrl = /^https?:\/\//i.test(q) ? q : 'https://' + q;
   } else {
-    clearBtn.classList.add('hidden');
-    hideSuggestions();
-  }
-});
-
-clearBtn.addEventListener('click', () => {
-  searchInput.value = '';
-  clearBtn.classList.add('hidden');
-  hideSuggestions();
-  searchInput.focus();
-});
-
-/* ---------- Entrada de búsqueda Header (Resultados) ---------- */
-if (headerSearchInput) {
-  headerSearchInput.addEventListener('input', () => {
-    const val = headerSearchInput.value.trim();
-    if (headerClearBtn) {
-      headerClearBtn.classList.toggle('hidden', !val);
-    }
-  });
-}
-if (headerClearBtn) {
-  headerClearBtn.addEventListener('click', () => {
-    headerSearchInput.value = '';
-    headerClearBtn.classList.add('hidden');
-    headerSearchInput.focus();
-  });
-}
-if (headerSearchForm) {
-  headerSearchForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    handleFormSubmit(headerSearchInput.value);
-  });
-}
-if (headerMicBtn) {
-  headerMicBtn.addEventListener('click', () => micBtn.click());
-}
-
-/* ---------- Autocompletado en tiempo real ---------- */
-function triggerSuggestions(query) {
-  if (isDirectWebAddress(query)) {
-    return hideSuggestions();
-  }
-  clearTimeout(suggestDebounceTimer);
-  suggestDebounceTimer = setTimeout(async () => {
-    if (suggestAbortController) suggestAbortController.abort();
-    suggestAbortController = new AbortController();
-    try {
-      const res = await fetch(`/api/suggest?q=${encodeURIComponent(query)}`, {
-        signal: suggestAbortController.signal,
-      });
-      if (!res.ok) return hideSuggestions();
-      const items = await res.json();
-      if (Array.isArray(items) && items.length) {
-        renderSuggestions(items);
-      } else {
-        hideSuggestions();
-      }
-    } catch (e) {
-      if (e.name !== 'AbortError') hideSuggestions();
-    }
-  }, 110);
-}
-
-function renderSuggestions(list) {
-  currentSuggestions = list;
-  selectedSuggestionIndex = -1;
-  suggestionsBox.innerHTML = '';
-  list.forEach((item) => {
-    const div = document.createElement('div');
-    div.className = 'suggestion-item';
-    div.innerHTML = `
-      <span class="suggestion-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-      </span>
-      <span>${escapeHtml(item)}</span>
-    `;
-    div.addEventListener('click', () => {
-      searchInput.value = item;
-      hideSuggestions();
-      executeSearch(item);
-    });
-    suggestionsBox.appendChild(div);
-  });
-  suggestionsBox.classList.remove('hidden');
-  searchBoxWrap.classList.add('has-suggestions');
-}
-
-function hideSuggestions() {
-  suggestionsBox.classList.add('hidden');
-  searchBoxWrap.classList.remove('has-suggestions');
-  currentSuggestions = [];
-  selectedSuggestionIndex = -1;
-}
-
-// Navegación con teclado en sugerencias
-searchInput.addEventListener('keydown', (e) => {
-  if (suggestionsBox.classList.contains('hidden') || !currentSuggestions.length) return;
-
-  const items = suggestionsBox.querySelectorAll('.suggestion-item');
-  if (e.key === 'ArrowDown') {
-    e.preventDefault();
-    selectedSuggestionIndex = (selectedSuggestionIndex + 1) % items.length;
-    updateSuggestionHighlight(items);
-  } else if (e.key === 'ArrowUp') {
-    e.preventDefault();
-    selectedSuggestionIndex = (selectedSuggestionIndex - 1 + items.length) % items.length;
-    updateSuggestionHighlight(items);
-  } else if (e.key === 'Escape') {
-    hideSuggestions();
-  } else if (e.key === 'Enter') {
-    if (selectedSuggestionIndex >= 0 && items[selectedSuggestionIndex]) {
-      e.preventDefault();
-      searchInput.value = currentSuggestions[selectedSuggestionIndex];
-      hideSuggestions();
-      handleFormSubmit(searchInput.value);
-    }
-  }
-});
-
-function updateSuggestionHighlight(items) {
-  items.forEach((it, i) => {
-    if (i === selectedSuggestionIndex) {
-      it.classList.add('selected');
-      searchInput.value = currentSuggestions[i];
-    } else {
-      it.classList.remove('selected');
-    }
-  });
-}
-
-document.addEventListener('click', (e) => {
-  if (!searchBoxWrap.contains(e.target)) hideSuggestions();
-});
-
-/* ---------- Envío Inteligente: Búsqueda o Navegación VPN Automática ---------- */
-function handleFormSubmit(rawQuery) {
-  const q = (rawQuery || searchInput.value || headerSearchInput.value || '').trim();
-  if (!q) return;
-  hideSuggestions();
-
-  if (isDirectWebAddress(q)) {
-    const targetUrl = /^https?:\/\//i.test(q) ? q : 'https://' + q;
-    window.location.href = `/proxy?url=${encodeURIComponent(targetUrl)}`;
-    return;
+    // Si es un término de búsqueda (como 'lupin'), buscar directamente en Google o Bing vía VPN
+    finalTargetUrl = `https://www.google.com/search?q=${encodeURIComponent(q)}&hl=es`;
   }
 
-  executeSearch(q);
+  tabData.url = finalTargetUrl;
+  tabData.title = extractHost(finalTargetUrl);
+  tabData.favicon = '🌐';
+  tabData.isHome = false;
+
+  homePage.classList.add('hidden');
+  addressInput.value = finalTargetUrl;
+  addressClearBtn.classList.remove('hidden');
+
+  let frame = document.getElementById(`frame-tab-${targetTabId}`);
+  if (!frame) {
+    frame = document.createElement('iframe');
+    frame.className = 'web-frame';
+    frame.id = `frame-tab-${targetTabId}`;
+    webFramesContainer.appendChild(frame);
+  }
+
+  // Carga dentro del túnel VPN seguro con embed=1
+  frame.src = `/proxy?url=${encodeURIComponent(finalTargetUrl)}&embed=1`;
+  frame.classList.add('active');
+
+  updateTabUI(targetTabId);
 }
 
-searchForm.addEventListener('submit', (e) => {
+/* ---------- Formularios de Búsqueda y Omnibox ---------- */
+addressForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  handleFormSubmit();
+  const val = addressInput.value.trim();
+  if (val) navigateTo(val);
 });
 
-// Botón "Me siento con suerte"
-btnLucky.addEventListener('click', async () => {
-  const q = searchInput.value.trim();
-  if (!q) return;
-  if (isDirectWebAddress(q)) {
-    return handleFormSubmit(q);
-  }
-  btnLucky.textContent = 'Navegando seguro…';
-  try {
-    const res = await fetch(`/api/search?q=${encodeURIComponent(q)}&category=all`);
-    const data = await res.json();
-    if (data.results && data.results.length) {
-      window.location.href = data.results[0].proxyUrl || `/proxy?url=${encodeURIComponent(data.results[0].url)}`;
-      return;
-    }
-  } catch {
-  } finally {
-    btnLucky.textContent = 'Me siento con suerte';
-  }
-  executeSearch(q);
+homeSearchForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const val = homeSearchInput.value.trim();
+  if (val) navigateTo(val);
 });
 
-// Pestañas de categoría
-categoryTabs.querySelectorAll('.cat-tab:not(.proxy-tab)').forEach((tab) => {
-  tab.addEventListener('click', () => {
-    categoryTabs.querySelectorAll('.cat-tab').forEach((t) => t.classList.remove('active'));
-    tab.classList.add('active');
-    activeCategory = tab.dataset.cat || 'all';
-    if (currentQuery) executeSearch(currentQuery, activeCategory);
+addressInput.addEventListener('input', () => {
+  addressClearBtn.classList.toggle('hidden', !addressInput.value.trim());
+});
+
+addressClearBtn.addEventListener('click', () => {
+  addressInput.value = '';
+  addressClearBtn.classList.add('hidden');
+  addressInput.focus();
+});
+
+/* ---------- Botones de Navegación Toolbar ---------- */
+navBackBtn.addEventListener('click', () => {
+  const frame = document.getElementById(`frame-tab-${activeTabId}`);
+  if (frame && frame.contentWindow) {
+    try { frame.contentWindow.history.back(); } catch {}
+  }
+});
+
+navForwardBtn.addEventListener('click', () => {
+  const frame = document.getElementById(`frame-tab-${activeTabId}`);
+  if (frame && frame.contentWindow) {
+    try { frame.contentWindow.history.forward(); } catch {}
+  }
+});
+
+navReloadBtn.addEventListener('click', () => {
+  const frame = document.getElementById(`frame-tab-${activeTabId}`);
+  if (frame && frame.src) {
+    frame.src = frame.src;
+  }
+});
+
+navHomeBtn.addEventListener('click', () => {
+  const tabData = tabs.get(activeTabId);
+  if (tabData) {
+    tabData.isHome = true;
+    tabData.title = 'Nueva pestaña';
+    tabData.favicon = '🦊';
+    updateTabUI(activeTabId);
+    switchTab(activeTabId);
+  }
+});
+
+/* ---------- Marcadores y Atajos ---------- */
+document.querySelectorAll('.bookmark-item, .shortcut-tile').forEach((item) => {
+  item.addEventListener('click', () => {
+    const url = item.dataset.url;
+    if (url) navigateTo(url);
   });
 });
 
-/* ---------- Ejecución y Renderizado de Resultados Cifrados ---------- */
-async function executeSearch(query, category = activeCategory) {
-  currentQuery = query;
-  if (!isStealthMode) {
-    document.title = `${query} - Buscar con Google`;
+/* ---------- Popup del Escudo Firefox ---------- */
+shieldBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  shieldPopup.classList.toggle('hidden');
+});
+if (shieldCloseBtn) {
+  shieldCloseBtn.addEventListener('click', () => shieldPopup.classList.add('hidden'));
+}
+document.addEventListener('click', (e) => {
+  if (!shieldPopup.contains(e.target) && e.target !== shieldBtn) {
+    shieldPopup.classList.add('hidden');
   }
+});
 
-  // Sincronizar ambos campos de texto
-  searchInput.value = query;
-  if (headerSearchInput) {
-    headerSearchInput.value = query;
-    if (headerClearBtn) headerClearBtn.classList.remove('hidden');
-  }
-
-  const newUrl = `${window.location.pathname}?q=${encodeURIComponent(query)}`;
-  window.history.pushState({ q: query }, '', newUrl);
-
-  // Activar vista de resultados
-  document.body.classList.add('in-results');
-  resultsView.classList.remove('hidden');
-  if (headerSearchWrap) headerSearchWrap.classList.remove('hidden');
-
-  resultsContainer.innerHTML = '<div style="padding:24px 0;color:var(--text-muted);font-size:15px;">🔍 Conectando con red segura y resolviendo DNS…</div>';
-  searchStats.textContent = 'Buscando en motores web cifrados…';
-
-  if (searchAbortController) searchAbortController.abort();
-  searchAbortController = new AbortController();
-
-  const startTime = Date.now();
-  try {
-    const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}`, {
-      signal: searchAbortController.signal,
-    });
-    const data = await res.json().catch(() => ({}));
-
-    const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-    const results = Array.isArray(data.results) ? data.results : [];
-
-    searchStats.textContent = `Cerca de ${Math.max(results.length * 1530, 14200)} resultados (${duration} segundos) • 🛡️ Conexión cifrada vía túnel VPN & DoH`;
-
-    if (!results.length) {
-      resultsContainer.innerHTML = `
-        <div style="padding:24px 0;">
-          <p style="color:var(--text-main);font-size:16px;margin-bottom:12px;">No se han encontrado resultados para <strong>${escapeHtml(query)}</strong>.</p>
-          <ul style="color:var(--text-sub);font-size:14px;padding-left:20px;line-height:1.6;">
-            <li>Verifica que no haya faltas de ortografía.</li>
-            <li>Prueba con palabras más comunes.</li>
-            <li>Prueba a navegar directamente con la <a href="/proxy" style="color:var(--link-color);">VPN Web</a>.</li>
-          </ul>
-        </div>`;
-      paginationBox.classList.add('hidden');
-      return;
-    }
-
-    renderResults(results);
-    paginationBox.classList.remove('hidden');
-  } catch (err) {
-    if (err.name !== 'AbortError') {
-      resultsContainer.innerHTML = `
-        <div style="padding:24px 0;">
-          <p style="color:#ea4335;">Sin conexión con el servidor. Revisa tu red o intenta de nuevo.</p>
-        </div>`;
+/* ---------- Sincronización de URLs entre el Iframe y Firefox ---------- */
+window.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'FIREFOX_SYNC_URL') {
+    const rawUrl = event.data.url;
+    const tabData = tabs.get(activeTabId);
+    if (tabData && rawUrl) {
+      tabData.url = rawUrl;
+      if (event.data.title) {
+        tabData.title = event.data.title;
+      } else {
+        tabData.title = extractHost(rawUrl);
+      }
+      addressInput.value = rawUrl;
+      updateTabUI(activeTabId);
     }
   }
-}
+});
 
-function renderResults(results) {
-  resultsContainer.innerHTML = '';
-
-  results.forEach((item) => {
-    const card = document.createElement('article');
-    card.className = 'result-card';
-
-    const safeUrl = item.url;
-    const proxyUrl = item.proxyUrl || `/proxy?url=${encodeURIComponent(safeUrl)}`;
-    const domain = item.domain || extractHost(safeUrl);
-    const faviconUrl = item.favicon || `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
-
-    card.innerHTML = `
-      <div class="result-meta">
-        <img class="result-favicon" src="${escapeHtml(faviconUrl)}" alt="" onerror="this.style.display='none'">
-        <div class="result-source-box">
-          <span class="result-site-name">${escapeHtml(domain || 'Sitio')}</span>
-          <span class="result-breadcrumb">${escapeHtml(safeUrl)}</span>
-        </div>
-      </div>
-      <h3 class="result-title">
-        <a href="${escapeHtml(proxyUrl)}" title="Navegar seguro mediante el túnel VPN">${escapeHtml(item.title)}</a>
-      </h3>
-      <p class="result-snippet">${escapeHtml(item.snippet || '')}</p>
-      <div class="result-actions">
-        <a href="${escapeHtml(proxyUrl)}" class="vpn-badge-btn" title="Navegar sin exponer tu IP real ni consultar tu DNS local">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-          Navegar Seguro (VPN Web)
-        </a>
-        <a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" class="direct-link-btn" title="Abrir enlace original directo en pestaña externa">
-          Enlace Directo ↗
-        </a>
-      </div>
-    `;
-
-    resultsContainer.appendChild(card);
-  });
-}
-
+/* ---------- Utilidades ---------- */
 function extractHost(urlStr) {
   try {
     return new URL(urlStr).hostname.replace(/^www\./, '');
@@ -460,75 +342,15 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-/* ---------- Regresar al inicio ---------- */
-if (homeLink) {
-  homeLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    resetToHome();
-  });
-}
-if (logoMain) {
-  logoMain.addEventListener('click', resetToHome);
-}
-
-function resetToHome() {
-  document.body.classList.remove('in-results');
-  resultsView.classList.add('hidden');
-  if (headerSearchWrap) headerSearchWrap.classList.add('hidden');
-  resultsContainer.innerHTML = '';
-  searchInput.value = '';
-  if (headerSearchInput) headerSearchInput.value = '';
-  clearBtn.classList.add('hidden');
-  if (headerClearBtn) headerClearBtn.classList.add('hidden');
-  hideSuggestions();
-  if (!isStealthMode) document.title = 'Google';
-  window.history.pushState({}, '', '/');
-  searchInput.focus();
-}
-
-/* ---------- Búsqueda por Voz y Lens ---------- */
-micBtn.addEventListener('click', () => {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (SpeechRecognition) {
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'es-ES';
-    recognition.start();
-    searchInput.placeholder = 'Escuchando… habla ahora';
-    recognition.onresult = (evt) => {
-      const transcript = evt.results[0][0].transcript;
-      searchInput.value = transcript;
-      if (headerSearchInput) headerSearchInput.value = transcript;
-      searchInput.placeholder = '';
-      handleFormSubmit(transcript);
-    };
-    recognition.onerror = () => { searchInput.placeholder = ''; };
-    recognition.onend = () => { searchInput.placeholder = ''; };
-  } else {
-    alert('Reconocimiento de voz listo. Escribe tu búsqueda en la barra.');
-  }
-});
-
-lensBtn.addEventListener('click', () => {
-  const imgUrl = prompt('Introduce la URL de una imagen o sitio para analizar en la VPN:');
-  if (imgUrl && imgUrl.trim()) {
-    handleFormSubmit(imgUrl.trim());
-  }
-});
-
-/* ---------- INICIO AUTOMÁTICO AL ENTRAR A LA URL DE RENDER ---------- */
+/* ---------- Carga Automática inicial con ?q= o ?url= ---------- */
 window.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const qParam = urlParams.get('q');
   const targetUrlParam = urlParams.get('url');
 
   if (targetUrlParam) {
-    window.location.href = `/proxy?url=${encodeURIComponent(targetUrlParam)}`;
+    navigateTo(targetUrlParam);
   } else if (qParam) {
-    searchInput.value = qParam;
-    if (headerSearchInput) headerSearchInput.value = qParam;
-    clearBtn.classList.remove('hidden');
-    handleFormSubmit(qParam);
-  } else {
-    searchInput.focus();
+    navigateTo(qParam);
   }
 });

@@ -1,59 +1,37 @@
-/* Google Look & Feel con Soporte de Tema Claro, Oscuro y Modo VPN */
+/* Estilos del Navegador Mozilla Firefox Web (Proton UI) */
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  
-  /* Tema Claro Google */
-  --bg-color: #ffffff;
-  --surface-color: #f8f9fa;
-  --text-main: #202124;
-  --text-sub: #4d5156;
-  --text-muted: #70757a;
-  --link-color: #1a0dab;
-  --link-visited: #681da8;
-  --search-border: #dfe1e5;
-  --search-hover-shadow: 0 1px 6px rgba(32,33,36,.28);
-  --btn-bg: #f8f9fa;
-  --btn-border: #f8f9fa;
-  --btn-text: #3c4043;
-  --btn-hover-bg: #f1f3f4;
-  --btn-hover-border: #dadce0;
-  --footer-bg: #f2f2f2;
-  --footer-border: #dadce0;
-  --modal-bg: #ffffff;
-  --modal-border: #dadce0;
-  --vpn-pill-bg: #e6f4ea;
-  --vpn-pill-text: #137333;
-  --vpn-pill-border: #ceead6;
-  --shield-btn-bg: #1a73e8;
-  --shield-btn-text: #ffffff;
-  --divider: #ebebeb;
+  --fx-bg-dark: #1c1b22;
+  --fx-tab-bar: #1c1b22;
+  --fx-toolbar: #2b2a33;
+  --fx-tab-active: #2b2a33;
+  --fx-tab-hover: #35343e;
+  --fx-tab-text: #fbfbfe;
+  --fx-tab-text-inactive: #cfcfd2;
+  --fx-omnibox-bg: #1c1b22;
+  --fx-omnibox-border: #42414d;
+  --fx-omnibox-focus-border: #00ddff;
+  --fx-text-main: #fbfbfe;
+  --fx-text-muted: #9f9fa9;
+  --fx-accent: #00ddff;
+  --fx-purple-private: #7542e5;
+  --fx-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-body.theme-dark {
-  --bg-color: #202124;
-  --surface-color: #303134;
-  --text-main: #e8eaed;
-  --text-sub: #bdc1c6;
-  --text-muted: #9aa0a6;
-  --link-color: #8ab4f8;
-  --link-visited: #c58af9;
-  --search-border: #5f6368;
-  --search-hover-shadow: 0 1px 6px rgba(0,0,0,.5);
-  --btn-bg: #303134;
-  --btn-border: #303134;
-  --btn-text: #e8eaed;
-  --btn-hover-bg: #3c4042;
-  --btn-hover-border: #5f6368;
-  --footer-bg: #171717;
-  --footer-border: #3c4043;
-  --modal-bg: #282a2d;
-  --modal-border: #3c4043;
-  --vpn-pill-bg: #133a20;
-  --vpn-pill-text: #81c995;
-  --vpn-pill-border: #1e5a32;
-  --shield-btn-bg: #8ab4f8;
-  --shield-btn-text: #202124;
-  --divider: #3c4043;
+body.firefox-theme-light {
+  --fx-bg-dark: #f0f0f4;
+  --fx-tab-bar: #e0e0e6;
+  --fx-toolbar: #ffffff;
+  --fx-tab-active: #ffffff;
+  --fx-tab-hover: #ebebeb;
+  --fx-tab-text: #15141a;
+  --fx-tab-text-inactive: #5b5b66;
+  --fx-omnibox-bg: #f0f0f4;
+  --fx-omnibox-border: #cdcdd4;
+  --fx-omnibox-focus-border: #0060df;
+  --fx-text-main: #15141a;
+  --fx-text-muted: #5b5b66;
+  --fx-accent: #0060df;
+  --fx-purple-private: #5b35b4;
 }
 
 * {
@@ -62,778 +40,539 @@ body.theme-dark {
   padding: 0;
 }
 
-body {
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  font-family: var(--font-family);
-  min-height: 100vh;
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--fx-bg-dark);
+  color: var(--fx-text-main);
+  font-family: var(--fx-font);
+}
+
+/* VENTANA PRINCIPAL DE FIREFOX */
+.firefox-window {
   display: flex;
   flex-direction: column;
-  transition: background-color 0.2s, color 0.2s;
+  width: 100vw;
+  height: 100vh;
 }
 
-/* ENCABEZADO SUPERIOR */
-#top-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 20px;
-  min-height: 60px;
-  box-sizing: border-box;
-  gap: 16px;
-}
-
-body.in-results #top-header {
-  border-bottom: 1px solid var(--divider);
-  padding: 12px 24px;
-}
-
-.header-left {
+/* 1. BARRA DE PESTAÑAS (TABS BAR) */
+.firefox-tabs-bar {
   display: flex;
   align-items: center;
-  gap: 16px;
-  flex: 1;
-}
-
-.header-logo {
-  text-decoration: none;
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  user-select: none;
-  display: flex;
-}
-
-/* Barra de búsqueda en el encabezado (Modo resultados) */
-.header-search-wrap {
-  flex: 1;
-  max-width: 680px;
-}
-.header-search-wrap.hidden {
-  display: none;
-}
-body.in-results .header-search-wrap {
-  display: block;
-}
-
-.header-search-box {
-  display: flex;
-  align-items: center;
-  background: var(--bg-color);
-  border: 1px solid var(--search-border);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  border-radius: 24px;
+  background-color: var(--fx-tab-bar);
   height: 42px;
-  padding: 0 12px 0 18px;
-  transition: box-shadow 0.2s, border-color 0.2s;
-}
-.header-search-box:hover, .header-search-box:focus-within {
-  box-shadow: var(--search-hover-shadow);
-  border-color: transparent;
-}
-#header-search-input {
-  flex: 1;
-  height: 100%;
-  border: none;
-  background: transparent;
-  outline: none;
-  font-size: 15px;
-  color: var(--text-main);
-  font-family: inherit;
-}
-.header-mic-btn {
-  display: flex;
-  align-items: center;
-  padding: 0 6px;
-  cursor: pointer;
-}
-.header-submit-btn {
-  background: none;
-  border: none;
-  padding: 0 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
+  padding: 0 8px;
+  gap: 6px;
+  border-bottom: 1px solid rgba(0,0,0,0.15);
+  user-select: none;
 }
 
-.header-right {
+.firefox-brand-icon {
   display: flex;
   align-items: center;
-  gap: 12px;
-  white-space: nowrap;
-}
-
-.header-link {
-  color: var(--text-main);
-  text-decoration: none;
-  font-size: 13px;
-  background: none;
-  border: none;
-  cursor: pointer;
   padding: 4px;
 }
-.header-link:hover {
-  text-decoration: underline;
-}
 
-/* Píldora de estado VPN y DNS */
-.vpn-status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background-color: var(--vpn-pill-bg);
-  color: var(--vpn-pill-text);
-  border: 1px solid var(--vpn-pill-border);
-  padding: 4px 10px;
-  border-radius: 99px;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: transform 0.15s;
-}
-.vpn-status-pill:hover {
-  transform: scale(1.03);
-}
-
-.status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: #34A853;
-  box-shadow: 0 0 6px #34A853;
-  animation: pulse-dot 2s infinite;
-}
-
-@keyframes pulse-dot {
-  0% { transform: scale(0.95); opacity: 0.8; }
-  50% { transform: scale(1.3); opacity: 1; }
-  100% { transform: scale(0.95); opacity: 0.8; }
-}
-
-.icon-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
+.firefox-tabs-list {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s, color 0.15s;
-}
-.icon-btn:hover {
-  background: var(--surface-color);
-  color: var(--text-main);
-}
-
-.user-avatar {
-  background: #1a73e8;
-  border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-/* Menú de aplicaciones de Google (9 puntos) */
-.dropdown-wrap {
-  position: relative;
-}
-.apps-menu {
-  position: absolute;
-  top: 46px;
-  right: 0;
-  background: var(--modal-bg);
-  border: 1px solid var(--modal-border);
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-  padding: 16px;
-  width: 280px;
-  z-index: 1000;
-  display: none;
-}
-.apps-menu.show {
-  display: block;
-}
-.apps-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-.app-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: var(--text-main);
-  padding: 10px 4px;
-  border-radius: 8px;
-  font-size: 12px;
-  transition: background 0.15s;
-}
-.app-item:hover {
-  background: var(--surface-color);
-}
-.app-icon {
-  font-size: 24px;
-  margin-bottom: 4px;
-}
-.app-icon.google-color {
-  font-weight: 800;
-  font-size: 22px;
-  color: #4285F4;
-}
-
-/* CONTENEDOR PRINCIPAL */
-#main-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* VISTA INICIO (GOOGLE HOME) */
-#home-view {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 16px 20px;
-  flex: 1;
-}
-
-body.in-results #home-view {
-  display: none;
-}
-
-/* LOGO DE GOOGLE OFICIAL */
-.google-logo-wrap {
-  font-size: clamp(60px, 10vw, 88px);
-  font-weight: 600;
-  letter-spacing: -2px;
-  margin-bottom: 26px;
-  user-select: none;
-  cursor: pointer;
-  display: flex;
-}
-.logo-g, .g-blue { color: #4285F4; }
-.logo-o.o-red, .o-red { color: #EA4335; }
-.logo-o.o-yellow, .o-yellow { color: #FBBC05; }
-.logo-l, .l-green { color: #34A853; }
-.logo-e, .e-red { color: #EA4335; }
-
-/* BARRA DE BÚSQUEDA GOOGLE INICIO */
-.search-box-wrap {
-  width: 100%;
-  max-width: 584px;
-  position: relative;
-}
-
-.search-input-box {
-  display: flex;
-  align-items: center;
-  background: var(--bg-color);
-  border: 1px solid var(--search-border);
-  box-shadow: none;
-  border-radius: 24px;
-  height: 46px;
-  padding: 0 14px;
-  transition: box-shadow 0.2s, border-color 0.2s;
-}
-.search-input-box:hover, .search-box-wrap.focused .search-input-box {
-  box-shadow: var(--search-hover-shadow);
-  border-color: transparent;
-}
-.search-box-wrap.has-suggestions .search-input-box {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom: 1px solid var(--divider);
-}
-
-.search-icon-left {
-  display: flex;
-  align-items: center;
-  padding-right: 12px;
-}
-
-#search-input {
-  flex: 1;
+  align-items: flex-end;
   height: 100%;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-size: 16px;
-  color: var(--text-main);
-  font-family: inherit;
+  gap: 4px;
+  flex: 1;
+  overflow-x: auto;
 }
-
-.clear-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0 8px;
-  display: flex;
-  align-items: center;
-}
-.clear-btn.hidden {
+.firefox-tabs-list::-webkit-scrollbar {
   display: none;
 }
 
-.mic-btn, .lens-btn {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 0 6px;
-  transition: transform 0.1s;
-}
-.mic-btn:hover, .lens-btn:hover {
-  transform: scale(1.1);
-}
-
-/* SUGERENCIAS / AUTOCOMPLETADO GOOGLE */
-.suggestions-box {
-  position: absolute;
-  top: 46px;
-  left: 0;
-  right: 0;
-  background: var(--bg-color);
-  border: 1px solid var(--search-border);
-  border-top: none;
-  border-radius: 0 0 24px 24px;
-  box-shadow: var(--search-hover-shadow);
-  z-index: 50;
-  overflow: hidden;
-  padding-bottom: 8px;
-}
-.suggestions-box.hidden {
-  display: none;
-}
-
-.suggestion-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 18px;
-  font-size: 15px;
-  color: var(--text-main);
-  cursor: pointer;
-}
-.suggestion-item:hover, .suggestion-item.selected {
-  background-color: var(--surface-color);
-}
-.suggestion-icon {
-  color: var(--text-muted);
-  display: flex;
-}
-
-/* BOTONES GOOGLE HOME */
-.home-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 26px;
-}
-
-.g-btn {
-  background-color: var(--btn-bg);
-  border: 1px solid var(--btn-border);
-  color: var(--btn-text);
-  font-size: 14px;
-  border-radius: 4px;
-  padding: 0 16px;
-  height: 36px;
-  cursor: pointer;
-  user-select: none;
-  transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s;
-}
-.g-btn:hover {
-  background-color: var(--btn-hover-bg);
-  border-color: var(--btn-hover-border);
-  box-shadow: 0 1px 1px rgba(0,0,0,.1);
-}
-
-.security-banner-home {
-  margin-top: 36px;
+.firefox-tab {
   display: flex;
   align-items: center;
   gap: 8px;
+  background: transparent;
+  color: var(--fx-tab-text-inactive);
+  padding: 0 12px;
+  height: 34px;
+  border-radius: 8px 8px 0 0;
   font-size: 12px;
-  color: var(--text-muted);
-  background: var(--surface-color);
-  padding: 6px 14px;
-  border-radius: 99px;
-  border: 1px solid var(--divider);
-}
-
-/* VISTA DE RESULTADOS (GOOGLE SEARCH RESULTS) */
-#results-view {
-  max-width: 860px;
-  margin: 0 0 0 170px;
-  padding: 0 20px 40px;
-}
-@media (max-width: 1024px) {
-  #results-view {
-    margin: 0 auto;
-    max-width: 720px;
-  }
-}
-#results-view.hidden {
-  display: none;
-}
-
-.category-tabs {
-  display: flex;
-  gap: 20px;
-  border-bottom: 1px solid var(--divider);
-  margin-bottom: 14px;
-  padding-bottom: 8px;
-  overflow-x: auto;
-}
-.cat-tab {
-  background: none;
-  border: none;
-  border-bottom: 3px solid transparent;
-  color: var(--text-muted);
-  font-size: 14px;
-  padding: 6px 2px;
+  max-width: 200px;
+  min-width: 120px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
+  position: relative;
+  transition: background 0.15s, color 0.15s;
 }
-.cat-tab.active {
-  color: var(--link-color);
-  border-bottom-color: var(--link-color);
+.firefox-tab:hover {
+  background: var(--fx-tab-hover);
+  color: var(--fx-tab-text);
+}
+.firefox-tab.active {
+  background: var(--fx-tab-active);
+  color: var(--fx-tab-text);
   font-weight: 500;
-}
-.cat-tab.proxy-tab {
-  text-decoration: none;
-  color: #34A853;
+  box-shadow: 0 -1px 3px rgba(0,0,0,0.2);
 }
 
-.search-stats {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-bottom: 22px;
-}
-
-/* TARJETAS DE RESULTADOS DE GOOGLE */
-.results-list {
-  display: flex;
-  flex-direction: column;
-  gap: 26px;
-}
-
-.result-card {
-  max-width: 652px;
-}
-
-.result-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 4px;
-}
-
-.result-favicon {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #f1f3f4;
-  object-fit: contain;
-}
-
-.result-source-box {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.result-site-name {
+.tab-favicon {
   font-size: 14px;
-  color: var(--text-main);
-  font-weight: 500;
+  flex-shrink: 0;
 }
-
-.result-breadcrumb {
-  font-size: 12px;
-  color: var(--text-muted);
+.tab-title {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 500px;
+  flex: 1;
 }
 
-.result-title {
-  margin: 2px 0 4px;
-  font-size: 20px;
-  line-height: 1.3;
-}
-.result-title a {
-  color: var(--link-color);
-  text-decoration: none;
-}
-.result-title a:hover {
-  text-decoration: underline;
-}
-
-.result-snippet {
+.tab-close-btn {
+  background: transparent;
+  border: none;
+  color: inherit;
   font-size: 14px;
-  line-height: 1.58;
-  color: var(--text-sub);
-  word-wrap: break-word;
-}
-
-.result-actions {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 10px;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.7;
+}
+.tab-close-btn:hover {
+  background: rgba(255,255,255,0.2);
+  opacity: 1;
 }
 
-.vpn-badge-btn {
-  background: var(--shield-btn-bg);
-  color: var(--shield-btn-text);
+.firefox-new-tab-btn {
+  background: transparent;
   border: none;
-  padding: 5px 12px;
+  color: var(--fx-tab-text-inactive);
+  width: 28px;
+  height: 28px;
   border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  text-decoration: none;
-  display: inline-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.firefox-new-tab-btn:hover {
+  background: var(--fx-tab-hover);
+  color: var(--fx-tab-text);
+}
+
+.firefox-window-controls {
+  display: flex;
   align-items: center;
   gap: 6px;
-  cursor: pointer;
-  transition: opacity 0.15s;
-}
-.vpn-badge-btn:hover {
-  opacity: 0.9;
 }
 
-.direct-link-btn {
-  color: var(--text-muted);
-  font-size: 12px;
-  text-decoration: none;
-  padding: 4px 8px;
-  border: 1px solid var(--divider);
-  border-radius: 6px;
-  transition: color 0.15s, border-color 0.15s;
-}
-.direct-link-btn:hover {
-  color: var(--text-main);
-  border-color: var(--text-muted);
-}
-
-/* PAGINACIÓN */
-.pagination-box {
-  margin-top: 40px;
-  padding: 20px 0;
-  display: flex;
-  justify-content: center;
-}
-.google-pagination-logo {
-  font-size: 32px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
-/* PIE DE PÁGINA */
-#footer {
-  background: var(--footer-bg);
-  border-top: 1px solid var(--footer-border);
-  color: var(--text-muted);
-  font-size: 14px;
-  margin-top: auto;
-}
-.footer-top {
-  padding: 12px 24px;
-  border-bottom: 1px solid var(--footer-border);
-  font-size: 13px;
-}
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 24px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.footer-links-left, .footer-links-right {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-.footer-link-btn {
-  background: none;
+.window-btn {
+  background: transparent;
   border: none;
-  color: var(--text-muted);
-  font-size: 13px;
+  color: var(--fx-tab-text);
+  padding: 4px 8px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
-.footer-link-btn:hover {
-  color: var(--text-main);
-  text-decoration: underline;
+.window-btn:hover {
+  background: var(--fx-tab-hover);
+}
+#private-badge-btn {
+  background: var(--fx-purple-private);
+  color: #fff;
+  font-weight: 600;
+  padding: 3px 10px;
 }
 
-/* MODAL DE SEGURIDAD Y DNS */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(4px);
-  z-index: 2000;
+/* 2. BARRA DE HERRAMIENTAS Y DIRECCIONES (TOOLBAR) */
+.firefox-toolbar {
   display: flex;
+  align-items: center;
+  background-color: var(--fx-toolbar);
+  height: 44px;
+  padding: 0 10px;
+  gap: 8px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.tool-btn {
+  background: transparent;
+  border: none;
+  color: var(--fx-text-main);
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.tool-btn:hover {
+  background: var(--fx-tab-hover);
+}
+
+/* Barra de direcciones de Firefox */
+.firefox-address-bar-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: var(--fx-omnibox-bg);
+  border: 1px solid var(--fx-omnibox-border);
+  border-radius: 8px;
+  height: 32px;
+  padding: 0 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.firefox-address-bar-wrap:focus-within {
+  border-color: var(--fx-omnibox-focus-border);
+  box-shadow: 0 0 0 2px rgba(0,221,255,0.25);
+}
+
+.firefox-shield-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid var(--fx-omnibox-border);
+  margin-right: 8px;
+}
+
+.firefox-address-form {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+}
+
+#firefox-address-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--fx-text-main);
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.address-clear-btn {
+  background: transparent;
+  border: none;
+  color: var(--fx-text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.address-clear-btn.hidden {
+  display: none;
+}
+
+.address-go-btn {
+  background: transparent;
+  border: none;
+  color: var(--fx-accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+}
+
+.toolbar-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#vpn-doh-pill {
+  width: auto;
+  padding: 0 8px;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #00ddff;
+  border: 1px solid rgba(0,221,255,0.3);
+}
+.status-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00ddff;
+  box-shadow: 0 0 4px #00ddff;
+}
+
+/* 3. BARRA DE MARCADORES (BOOKMARKS) */
+.firefox-bookmarks-bar {
+  display: flex;
+  align-items: center;
+  background-color: var(--fx-toolbar);
+  height: 28px;
+  padding: 0 12px;
+  gap: 8px;
+  border-bottom: 1px solid rgba(0,0,0,0.15);
+  overflow-x: auto;
+}
+.firefox-bookmarks-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.bookmark-item {
+  background: transparent;
+  border: none;
+  color: var(--fx-tab-text-inactive);
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.bookmark-item:hover {
+  background: var(--fx-tab-hover);
+  color: var(--fx-tab-text);
+}
+
+/* 4. VIEWPORT DE CONTENIDO */
+.firefox-content-viewport {
+  flex: 1;
+  position: relative;
+  background: #2b2a33;
+}
+
+/* PÁGINA DE INICIO DE FIREFOX */
+.firefox-home-page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 20px;
+  overflow-y: auto;
 }
-.modal-backdrop.hidden {
+.firefox-home-page.hidden {
   display: none;
 }
-.modal-card {
-  background: var(--modal-bg);
-  border: 1px solid var(--modal-border);
-  border-radius: 14px;
+
+.firefox-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.firefox-logo-wrap {
+  margin-bottom: 12px;
+}
+.firefox-hero h1 {
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.firefox-tagline {
+  color: var(--fx-text-muted);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.firefox-home-search {
   width: 100%;
   max-width: 600px;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.3);
-  overflow: hidden;
-  animation: modal-enter 0.2s ease-out;
+  margin-bottom: 30px;
 }
-@keyframes modal-enter {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
-}
-.modal-header {
+.home-search-box {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 18px 24px;
-  border-bottom: 1px solid var(--divider);
+  background: var(--fx-omnibox-bg);
+  border: 1px solid var(--fx-omnibox-border);
+  border-radius: 8px;
+  height: 48px;
+  padding: 0 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
-.modal-title {
+.home-search-icon {
+  font-size: 18px;
+  margin-right: 12px;
+  opacity: 0.6;
+}
+#home-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--fx-text-main);
+  font-size: 16px;
+  font-family: inherit;
+}
+.home-search-btn {
+  background: var(--fx-accent);
+  color: #0f172a;
+  border: none;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.firefox-shortcuts-grid {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.shortcut-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  width: 80px;
+  transition: background 0.15s;
+}
+.shortcut-tile:hover {
+  background: var(--fx-tab-hover);
+}
+.tile-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+.tile-label {
+  font-size: 11px;
+  color: var(--fx-text-main);
+}
+
+.firefox-privacy-banner {
+  max-width: 580px;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--fx-text-muted);
+}
+.badge-lock {
+  background: var(--fx-purple-private);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* CONTENEDOR DE IFRAMES DE PESTAÑAS */
+.web-frames-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.web-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #ffffff;
+  display: none;
+}
+.web-frame.active {
+  display: block;
+}
+
+/* POPUP DEL ESCUDO FIREFOX */
+.shield-popup {
+  position: absolute;
+  top: 80px;
+  left: 120px;
+  background: #2b2a33;
+  border: 1px solid #42414d;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  width: 320px;
+  z-index: 2000;
+  animation: popup-enter 0.15s ease-out;
+}
+@keyframes popup-enter {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.shield-popup.hidden {
+  display: none;
+}
+.popup-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid #42414d;
   display: flex;
   align-items: center;
   gap: 10px;
 }
-.modal-title h3 {
-  font-size: 17px;
-  font-weight: 600;
-}
-.modal-close {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: var(--text-muted);
-}
-
-.modal-body {
-  padding: 24px;
-  max-height: 70vh;
-  overflow-y: auto;
-}
-.status-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-bottom: 22px;
-}
-@media (max-width: 600px) {
-  .status-grid { grid-template-columns: 1fr; }
-}
-.status-item {
-  background: var(--surface-color);
-  padding: 14px;
-  border-radius: 8px;
-  border: 1px solid var(--divider);
-}
-.status-badge-ok {
-  background: #34A853;
-  color: #fff;
+.shield-badge {
+  background: #00ddff;
+  color: #000;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   padding: 2px 6px;
   border-radius: 4px;
-  display: inline-block;
-  margin-bottom: 8px;
 }
-.status-item h4 {
-  font-size: 14px;
-  margin-bottom: 4px;
+.popup-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-.status-item p {
-  font-size: 12px;
-  color: var(--text-sub);
+.feature-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.feat-info strong {
+  font-size: 13px;
+  display: block;
+  margin-bottom: 2px;
+}
+.feat-info p {
+  font-size: 11px;
+  color: var(--fx-text-muted);
   line-height: 1.4;
 }
-
-.dns-config-box {
-  background: var(--surface-color);
-  border: 1px solid var(--divider);
-  border-radius: 8px;
-  padding: 16px;
-}
-.dns-config-box h4 {
-  font-size: 15px;
-  margin-bottom: 6px;
-  color: #1a73e8;
-}
-.dns-desc {
-  font-size: 13px;
-  color: var(--text-sub);
-  margin-bottom: 12px;
-}
-.code-copy-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-.code-copy-row input {
-  flex: 1;
-  background: var(--bg-color);
-  border: 1px solid var(--search-border);
-  color: var(--text-main);
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-family: monospace;
-}
-.code-copy-row button {
-  background: #1a73e8;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 0 14px;
-  font-size: 13px;
-  cursor: pointer;
-  font-weight: 500;
-}
-.dns-steps {
-  font-size: 13px;
-  color: var(--text-sub);
-  padding-left: 20px;
-  line-height: 1.6;
-}
-
-.modal-footer {
-  padding: 14px 24px;
-  border-top: 1px solid var(--divider);
+.popup-footer {
+  padding: 10px 16px;
+  border-top: 1px solid #42414d;
   display: flex;
   justify-content: flex-end;
 }
-.g-btn-primary {
-  background: #1a73e8;
+.popup-close-btn {
+  background: #42414d;
   color: #fff;
   border: none;
-  padding: 8px 20px;
   border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 4px 12px;
+  font-size: 12px;
   cursor: pointer;
 }

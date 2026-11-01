@@ -387,7 +387,8 @@ async function handle(req, res) {
       return send(res, 429, 'Demasiadas solicitudes al proxy, por favor espera un momento.', { 'Content-Type': 'text/plain; charset=utf-8' });
     }
 
-    return handleProxyRequest(req, res, targetUrl);
+    const isEmbed = url.searchParams.get('embed') === '1';
+    return handleProxyRequest(req, res, targetUrl, isEmbed);
   }
 
   // 6. Autocompletado de búsqueda (/api/suggest)

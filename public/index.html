@@ -3,233 +3,223 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Google</title>
-  <link rel="icon" id="favicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234285F4' d='M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.02h3.87c2.27-2.09 3.675-5.17 3.675-9.12z'/%3E%3Cpath fill='%2334A853' d='M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.87-3.02c-1.08.72-2.45 1.16-4.06 1.16-3.13 0-5.78-2.11-6.73-4.96H1.28v3.12C3.33 21.36 7.39 24 12 24z'/%3E%3Cpath fill='%23FBBC05' d='M5.27 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.61H1.28C.46 8.23 0 10.06 0 12s.46 3.77 1.28 5.39l3.99-3.12z'/%3E%3Cpath fill='%23EA4335' d='M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.39 0 3.33 2.64 1.28 6.61l3.99 3.12c.95-2.85 3.6-4.98 6.73-4.98z'/%3E%3C/svg%3E">
+  <title>Mozilla Firefox — Navegador Web Privado</title>
+  <!-- Favicon oficial de Mozilla Firefox -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23ff9400' d='M16 2C8.27 2 2 8.27 2 16s6.27 14 14 14 14-6.27 14-14S23.73 2 16 2z'/%3E%3Cpath fill='%23ff3a00' d='M25.7 8.5C23.6 5.8 20.2 4 16 4 9.4 4 4 9.4 4 16c0 3.2 1.3 6.1 3.4 8.2.3-.5.7-1.1 1.1-1.6C7.5 21 6.5 19 6.5 16.8c0-4.7 3.5-8.5 8-8.9-.4.9-.6 1.9-.6 3 0 3.9 3.1 7.1 7 7.1 1.2 0 2.3-.3 3.3-.9.4 1.7.1 3.5-.8 5-.6 1-1.4 1.8-2.4 2.4 4.5-.8 8-4.7 8-9.5 0-2.5-.9-4.8-2.3-6.5z'/%3E%3Cpath fill='%23ffe600' d='M19.5 12c-2.5 0-4.5 2-4.5 4.5 0 .8.2 1.6.6 2.2.8-1.5 2.2-2.7 4-3.1-.1-1.9-.1-3.6-.1-3.6z'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="theme-light">
-  <!-- ENCABEZADO SUPERIOR -->
-  <header id="top-header">
-    <div class="header-left">
-      <!-- Logo Google en el encabezado -->
-      <a href="/" class="header-logo" id="home-link" title="Ir al inicio de Google">
-        <span class="logo-g g-blue">G</span><span class="logo-o o-red">o</span><span class="logo-o o-yellow">o</span><span class="logo-g g-blue">g</span><span class="logo-l l-green">l</span><span class="logo-e e-red">e</span>
-      </a>
+<body class="firefox-theme-dark">
 
-      <!-- Barra de búsqueda superior en modo resultados -->
-      <div id="header-search-wrap" class="header-search-wrap hidden">
-        <form id="header-search-form" autocomplete="off">
-          <div class="header-search-box">
-            <input type="text" id="header-search-input" placeholder="Buscar con Google o ingresar URL…" spellcheck="false" autocomplete="off" aria-label="Buscar">
-            <button type="button" id="header-clear-btn" class="clear-btn hidden" title="Borrar">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#70757a"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-            </button>
-            <div class="header-mic-btn" id="header-mic-btn" title="Búsqueda por voz">
-              <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path fill="#34A853" d="M11 18.92h2V22h-2z"/><path fill="#F4B400" d="M7 11H5c0 3.53 2.61 6.43 6 6.92v-2.04c-2.28-.46-4-2.48-4-4.88z"/><path fill="#EA4335" d="M19 11c0 2.4-1.72 4.42-4 4.88v2.04c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-            </div>
-            <button type="submit" class="header-submit-btn" title="Buscar">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="#4285F4"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            </button>
-          </div>
+  <!-- VENTANA PRINCIPAL DE MOZILLA FIREFOX -->
+  <div id="firefox-window" class="firefox-window">
+
+    <!-- 1. BARRA DE PESTAÑAS DE FIREFOX -->
+    <div class="firefox-tabs-bar" id="tabs-bar">
+      <!-- Icono Firefox -->
+      <div class="firefox-brand-icon" title="Mozilla Firefox Web">
+        <svg width="22" height="22" viewBox="0 0 32 32">
+          <path fill="#ff9400" d="M16 2C8.27 2 2 8.27 2 16s6.27 14 14 14 14-6.27 14-14S23.73 2 16 2z"/>
+          <path fill="#ff3a00" d="M25.7 8.5C23.6 5.8 20.2 4 16 4 9.4 4 4 9.4 4 16c0 3.2 1.3 6.1 3.4 8.2.3-.5.7-1.1 1.1-1.6C7.5 21 6.5 19 6.5 16.8c0-4.7 3.5-8.5 8-8.9-.4.9-.6 1.9-.6 3 0 3.9 3.1 7.1 7 7.1 1.2 0 2.3-.3 3.3-.9.4 1.7.1 3.5-.8 5-.6 1-1.4 1.8-2.4 2.4 4.5-.8 8-4.7 8-9.5 0-2.5-.9-4.8-2.3-6.5z"/>
+          <path fill="#ffe600" d="M19.5 12c-2.5 0-4.5 2-4.5 4.5 0 .8.2 1.6.6 2.2.8-1.5 2.2-2.7 4-3.1-.1-1.9-.1-3.6-.1-3.6z"/>
+        </svg>
+      </div>
+
+      <!-- Lista de pestañas activas -->
+      <div class="firefox-tabs-list" id="tabs-container">
+        <!-- Pestaña 1 por defecto -->
+        <div class="firefox-tab active" data-tab-id="1">
+          <span class="tab-favicon">🦊</span>
+          <span class="tab-title">Nueva pestaña</span>
+          <button type="button" class="tab-close-btn" title="Cerrar pestaña">&times;</button>
+        </div>
+      </div>
+
+      <!-- Botón nueva pestaña '+' -->
+      <button type="button" class="firefox-new-tab-btn" id="new-tab-btn" title="Abrir una nueva pestaña (Ctrl+T)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+      </button>
+
+      <!-- Controles de ventana / Privacidad -->
+      <div class="firefox-window-controls">
+        <button type="button" class="window-btn" id="private-badge-btn" title="Navegación Privada Cifrada Activa">
+          <span class="private-mask-icon">🎭</span>
+          <span class="private-text">Privada</span>
+        </button>
+        <button type="button" class="window-btn" id="theme-btn" title="Cambiar tema (Oscuro / Claro)">🌓</button>
+      </div>
+    </div>
+
+    <!-- 2. BARRA DE NAVEGACIÓN Y HERRAMIENTAS (TOOLBAR) -->
+    <div class="firefox-toolbar">
+      <div class="nav-buttons">
+        <button type="button" class="tool-btn" id="nav-back-btn" title="Retroceder una página">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <button type="button" class="tool-btn" id="nav-forward-btn" title="Avanzar una página">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+        </button>
+        <button type="button" class="tool-btn" id="nav-reload-btn" title="Recargar página actual">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+        </button>
+        <button type="button" class="tool-btn" id="nav-home-btn" title="Página de inicio de Firefox">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        </button>
+      </div>
+
+      <!-- BARRA DE DIRECCIONES Y BÚSQUEDA (OMNIBOX) -->
+      <div class="firefox-address-bar-wrap">
+        <!-- Escudo de protección contra el rastreo de Mozilla -->
+        <button type="button" class="firefox-shield-btn" id="firefox-shield-btn" title="Protección contra el rastreo mejorada de Firefox (DoH & VPN Activos)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#00ffff">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+          </svg>
+        </button>
+
+        <form id="firefox-address-form" class="firefox-address-form" autocomplete="off">
+          <input type="text" id="firefox-address-input" placeholder="Buscar con Google o ingresar dirección web…" spellcheck="false" autocomplete="off">
+          <button type="button" id="address-clear-btn" class="address-clear-btn hidden" title="Limpiar">&times;</button>
+          <button type="submit" class="address-go-btn" title="Navegar seguro">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+          </button>
         </form>
       </div>
 
-      <!-- Píldora de estado de red -->
-      <span class="vpn-status-pill" id="vpn-status-btn" title="Ver estado del Túnel VPN y DNS">
-        <span class="status-dot"></span>
-        <span class="status-text">VPN & DNS Seguro</span>
-      </span>
+      <!-- Botones laterales de herramientas -->
+      <div class="toolbar-tools">
+        <button type="button" class="tool-btn" id="vpn-doh-pill" title="Túnel VPN & DNS DoH">
+          <span class="status-indicator"></span>
+          <span class="vpn-label">DoH/VPN</span>
+        </button>
+        <button type="button" class="tool-btn" id="menu-btn" title="Menú de Firefox">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
+      </div>
     </div>
 
-    <div class="header-right">
-      <a href="/proxy?url=https%3A%2F%2Fmail.google.com" target="_blank" rel="noopener noreferrer" class="header-link">Gmail</a>
-      <button type="button" class="header-link" id="nav-images-btn">Imágenes</button>
-      
-      <!-- Botón Modo Camuflaje -->
-      <button type="button" class="icon-btn" id="stealth-toggle" title="Modo Camuflaje">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l7 3.12v4.7c0 4.54-3.14 8.78-7 9.88-3.86-1.1-7-5.34-7-9.88v-4.7l7-3.12z"/></svg>
+    <!-- 3. BARRA DE MARCADORES (BOOKMARKS BAR) -->
+    <div class="firefox-bookmarks-bar">
+      <button type="button" class="bookmark-item" data-url="https://www.google.com">
+        <span class="bm-icon">🔍</span> Google
       </button>
-
-      <!-- Botón Tema Claro / Oscuro -->
-      <button type="button" class="icon-btn" id="theme-toggle" title="Cambiar tema">
-        <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+      <button type="button" class="bookmark-item" data-url="https://es.wikipedia.org">
+        <span class="bm-icon">📚</span> Wikipedia
       </button>
-
-      <!-- Menú de Apps de Google -->
-      <div class="dropdown-wrap">
-        <button type="button" class="icon-btn" id="apps-btn" title="Aplicaciones Seguras">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM6 4c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
-        </button>
-        <div class="apps-menu" id="apps-menu">
-          <div class="apps-grid">
-            <a href="/" class="app-item"><div class="app-icon google-color">G</div><span>Búsqueda</span></a>
-            <a href="/proxy?url=https%3A%2F%2Fnews.google.com" target="_blank" class="app-item"><div class="app-icon">📰</div><span>Noticias</span></a>
-            <a href="/proxy?url=https%3A%2F%2Ftranslate.google.com" target="_blank" class="app-item"><div class="app-icon">🌐</div><span>Traductor</span></a>
-            <a href="/proxy?url=https%3A%2F%2Fes.wikipedia.org" target="_blank" class="app-item"><div class="app-icon">📚</div><span>Wikipedia</span></a>
-            <a href="/proxy?url=https%3A%2F%2Fduckduckgo.com" target="_blank" class="app-item"><div class="app-icon">🦆</div><span>DuckDuckGo</span></a>
-            <a href="/proxy" class="app-item"><div class="app-icon">🛡️</div><span>VPN Web</span></a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Avatar -->
-      <button type="button" class="user-avatar" id="avatar-btn" title="Centro de Seguridad">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#ffffff"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <button type="button" class="bookmark-item" data-url="https://www.youtube.com">
+        <span class="bm-icon">📺</span> YouTube
+      </button>
+      <button type="button" class="bookmark-item" data-url="https://news.google.com">
+        <span class="bm-icon">📰</span> Noticias
+      </button>
+      <button type="button" class="bookmark-item" data-url="https://duckduckgo.com">
+        <span class="bm-icon">🦆</span> DuckDuckGo
+      </button>
+      <button type="button" class="bookmark-item" data-url="https://translate.google.com">
+        <span class="bm-icon">🌐</span> Traductor
+      </button>
+      <button type="button" class="bookmark-item" data-url="https://reddit.com">
+        <span class="bm-icon">👽</span> Reddit
       </button>
     </div>
-  </header>
 
-  <!-- CONTENEDOR PRINCIPAL -->
-  <main id="main-container">
-    <!-- VISTA INICIO (GOOGLE HOME) -->
-    <section id="home-view">
-      <!-- LOGO DE GOOGLE GRANDE EN INICIO -->
-      <div class="google-logo-wrap" id="logo-main">
-        <span class="logo-g g-blue">G</span>
-        <span class="logo-o o-red">o</span>
-        <span class="logo-o o-yellow">o</span>
-        <span class="logo-g g-blue">g</span>
-        <span class="logo-l l-green">l</span>
-        <span class="logo-e e-red">e</span>
-      </div>
+    <!-- 4. ÁREA DE VISUALIZACIÓN DE PESTAÑAS (VIEWPORT) -->
+    <div class="firefox-content-viewport" id="content-viewport">
 
-      <!-- BARRA DE BÚSQUEDA GOOGLE INICIO -->
-      <div class="search-box-wrap">
-        <form id="search-form" autocomplete="off">
-          <div class="search-input-box">
-            <div class="search-icon-left">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="#9aa0a6"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            </div>
-            
-            <input type="text" id="search-input" placeholder="" autofocus spellcheck="false" autocomplete="off" aria-label="Buscar">
-
-            <button type="button" id="clear-btn" class="clear-btn hidden" title="Borrar">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="#70757a"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-            </button>
-
-            <div class="mic-btn" id="mic-btn" title="Búsqueda por voz">
-              <svg width="24" height="24" viewBox="0 0 24 24"><path fill="#4285F4" d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path fill="#34A853" d="M11 18.92h2V22h-2z"/><path fill="#F4B400" d="M7 11H5c0 3.53 2.61 6.43 6 6.92v-2.04c-2.28-.46-4-2.48-4-4.88z"/><path fill="#EA4335" d="M19 11c0 2.4-1.72 4.42-4 4.88v2.04c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-            </div>
-
-            <div class="lens-btn" id="lens-btn" title="Buscar por imagen">
-              <svg width="24" height="24" viewBox="0 0 24 24"><path fill="#4285F4" d="M5 3h4v2H5v4H3V5c0-1.1.9-2 2-2zm14 0c1.1 0 2 .9 2 2v4h-2V5h-4V3h4zM5 21c-1.1 0-2-.9-2-2v-4h2v4h4v2H5zm14 0h-4v-2h4v-4h2v4c0 1.1-.9 2-2 2z"/><path fill="#EA4335" d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/></svg>
-            </div>
+      <!-- PÁGINA DE INICIO DE FIREFOX (ABOUT:HOME / NEW TAB) -->
+      <div id="firefox-home-page" class="firefox-home-page">
+        <div class="firefox-hero">
+          <!-- Logo de Firefox Oficial -->
+          <div class="firefox-logo-wrap">
+            <svg width="90" height="90" viewBox="0 0 32 32">
+              <path fill="#ff9400" d="M16 2C8.27 2 2 8.27 2 16s6.27 14 14 14 14-6.27 14-14S23.73 2 16 2z"/>
+              <path fill="#ff3a00" d="M25.7 8.5C23.6 5.8 20.2 4 16 4 9.4 4 4 9.4 4 16c0 3.2 1.3 6.1 3.4 8.2.3-.5.7-1.1 1.1-1.6C7.5 21 6.5 19 6.5 16.8c0-4.7 3.5-8.5 8-8.9-.4.9-.6 1.9-.6 3 0 3.9 3.1 7.1 7 7.1 1.2 0 2.3-.3 3.3-.9.4 1.7.1 3.5-.8 5-.6 1-1.4 1.8-2.4 2.4 4.5-.8 8-4.7 8-9.5 0-2.5-.9-4.8-2.3-6.5z"/>
+              <path fill="#ffe600" d="M19.5 12c-2.5 0-4.5 2-4.5 4.5 0 .8.2 1.6.6 2.2.8-1.5 2.2-2.7 4-3.1-.1-1.9-.1-3.6-.1-3.6z"/>
+            </svg>
           </div>
+          <h1>Firefox</h1>
+          <p class="firefox-tagline">Navegación Privada • VPN Integrada • DNS Seguro DoH</p>
+        </div>
 
-          <div id="suggestions-box" class="suggestions-box hidden"></div>
+        <!-- Buscador Central de Firefox -->
+        <div class="firefox-home-search">
+          <form id="home-search-form" autocomplete="off">
+            <div class="home-search-box">
+              <span class="home-search-icon">🔍</span>
+              <input type="text" id="home-search-input" placeholder="Buscar con Google o ingresar dirección…" autofocus>
+              <button type="submit" class="home-search-btn">Buscar</button>
+            </div>
+          </form>
+        </div>
 
-          <div class="home-buttons">
-            <button type="submit" class="g-btn" id="btn-search">Buscar con Google</button>
-            <button type="button" class="g-btn" id="btn-lucky">Me siento con suerte</button>
+        <!-- Atajos Rápidos / Sitios Top -->
+        <div class="firefox-shortcuts-grid">
+          <div class="shortcut-tile" data-url="https://www.google.com">
+            <div class="tile-icon" style="background:#4285F4;color:#fff;">G</div>
+            <span class="tile-label">Google</span>
           </div>
-        </form>
-      </div>
+          <div class="shortcut-tile" data-url="https://es.wikipedia.org">
+            <div class="tile-icon" style="background:#f6f6f6;color:#333;">W</div>
+            <span class="tile-label">Wikipedia</span>
+          </div>
+          <div class="shortcut-tile" data-url="https://www.youtube.com">
+            <div class="tile-icon" style="background:#FF0000;color:#fff;">▶</div>
+            <span class="tile-label">YouTube</span>
+          </div>
+          <div class="shortcut-tile" data-url="https://duckduckgo.com">
+            <div class="tile-icon" style="background:#DE5833;color:#fff;">🦆</div>
+            <span class="tile-label">DuckDuckGo</span>
+          </div>
+          <div class="shortcut-tile" data-url="https://elpais.com">
+            <div class="tile-icon" style="background:#003366;color:#fff;">📰</div>
+            <span class="tile-label">El País</span>
+          </div>
+          <div class="shortcut-tile" data-url="https://news.google.com">
+            <div class="tile-icon" style="background:#34A853;color:#fff;">N</div>
+            <span class="tile-label">Noticias</span>
+          </div>
+        </div>
 
-      <div class="security-banner-home">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="#34A853"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-        <span>Búsqueda Blindada: Conexión Cifrada TLS • DNS Seguro DoH • Modo VPN Web</span>
-      </div>
-    </section>
-
-    <!-- VISTA RESULTADOS (GOOGLE RESULTS PAGE) -->
-    <section id="results-view" class="hidden">
-      <!-- PESTAÑAS DE CATEGORÍA DE GOOGLE -->
-      <div class="category-tabs" id="category-tabs">
-        <button class="cat-tab active" data-cat="all">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-          Todo
-        </button>
-        <button class="cat-tab" data-cat="news">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-          Noticias
-        </button>
-        <button class="cat-tab" data-cat="images">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
-          Imágenes
-        </button>
-        <a href="/proxy" class="cat-tab proxy-tab" target="_blank" rel="noopener noreferrer">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#34a853"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-          Navegar con VPN Web
-        </a>
-      </div>
-
-      <!-- ESTADÍSTICAS DE BÚSQUEDA -->
-      <div class="search-stats" id="search-stats">
-        Cargando resultados seguros…
-      </div>
-
-      <!-- CONTENEDOR DE RESULTADOS ORGÁNICOS -->
-      <div id="results-container" class="results-list" aria-live="polite"></div>
-
-      <!-- PAGINACIÓN GOOGLE AL PIE -->
-      <div id="pagination-box" class="pagination-box hidden">
-        <div class="google-pagination-logo">
-          <span class="g-blue">G</span><span class="o-red">o</span><span class="o-yellow">o</span><span class="o-yellow">o</span><span class="o-yellow">o</span><span class="g-blue">g</span><span class="l-green">l</span><span class="e-red">e</span>
+        <div class="firefox-privacy-banner">
+          <span class="badge-lock">🔒 Protegido</span>
+          <p>Tus consultas viajan cifradas con TLS. Los sitios que visites solo verán la IP del servidor en Render y las solicitudes DNS se resuelven mediante <strong>DNS sobre HTTPS (DoH)</strong>.</p>
         </div>
       </div>
-    </section>
-  </main>
 
-  <!-- PIE DE PÁGINA GOOGLE -->
-  <footer id="footer">
-    <div class="footer-top">
-      <span class="footer-location">🛡️ Red Protegida • DNS Seguro Activo (DoH)</span>
+      <!-- CONTENEDOR DE PESTAÑAS WEB (IFRAMES VIRTUALES) -->
+      <div id="web-frames-container" class="web-frames-container"></div>
     </div>
-    <div class="footer-bottom">
-      <div class="footer-links-left">
-        <button type="button" class="footer-link-btn" id="open-vpn-modal-btn">Cómo funciona la VPN</button>
-        <button type="button" class="footer-link-btn" id="open-dns-guide-btn">Configurar DNS en mi móvil / PC</button>
+  </div>
+
+  <!-- PANEL DE PROTECCIÓN CONTRA EL RASTREO (SHIELD POPUP) -->
+  <div id="shield-popup" class="shield-popup hidden">
+    <div class="popup-header">
+      <div class="shield-badge">🛡️ ACTIVA</div>
+      <h3>Protección de Mozilla Firefox</h3>
+    </div>
+    <div class="popup-body">
+      <div class="feature-row">
+        <span class="feat-icon">✅</span>
+        <div class="feat-info">
+          <strong>Protección contra el rastreo mejorada</strong>
+          <p>Bloqueo de rastreadores, cookies de terceros y scripts criptomineros.</p>
+        </div>
       </div>
-      <div class="footer-links-right">
-        <button type="button" class="footer-link-btn" id="footer-privacy-btn">Privacidad Blindada</button>
-        <button type="button" class="footer-link-btn" id="footer-status-btn">Estado del Sistema</button>
+      <div class="feature-row">
+        <span class="feat-icon">✅</span>
+        <div class="feat-info">
+          <strong>DNS sobre HTTPS (DoH)</strong>
+          <p>Resolución cifrada RFC 8484 para evitar espionaje del ISP.</p>
+        </div>
+      </div>
+      <div class="feature-row">
+        <span class="feat-icon">✅</span>
+        <div class="feat-info">
+          <strong>Túnel VPN Web Cifrado</strong>
+          <p>Tu dirección IP real está oculta tras el servidor de Render.</p>
+        </div>
       </div>
     </div>
-  </footer>
-
-  <!-- MODAL DE SEGURIDAD, VPN Y CONFIGURACIÓN DNS -->
-  <div id="security-modal" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-title">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="#34A853"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-          <h3>Centro de Seguridad, VPN Web y DNS Cifrado</h3>
-        </div>
-        <button type="button" class="modal-close" id="modal-close-btn">&times;</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="status-grid">
-          <div class="status-item">
-            <span class="status-badge-ok">ACTIVO</span>
-            <h4>Túnel VPN Web</h4>
-            <p>Al hacer clic en cualquier resultado, el servidor actúa como un proxy cifrado intermedio. Tu IP real nunca llega al sitio destino y tu proveedor de internet (ISP) no ve la web que visitas.</p>
-          </div>
-          <div class="status-item">
-            <span class="status-badge-ok">ACTIVO</span>
-            <h4>DNS Seguro del Sitio (DoH)</h4>
-            <p>Servidor DNS-over-HTTPS (RFC 8484) integrado. Previene envenenamiento de DNS, censura y espionaje de resoluciones de dominio.</p>
-          </div>
-        </div>
-
-        <div class="dns-config-box">
-          <h4>Configura tu navegador o móvil con el DNS de este sitio:</h4>
-          <p class="dns-desc">Protege todo tu dispositivo contra bloqueos y espionaje configurando el DNS Seguro en Chrome, Firefox, Edge o Android:</p>
-          <div class="code-copy-row">
-            <input type="text" id="doh-url-field" readonly value="https://portal-buscador.onrender.com/api/dns-query">
-            <button type="button" id="copy-doh-btn">Copiar URL DoH</button>
-          </div>
-          <ol class="dns-steps">
-            <li><strong>En Chrome / Edge / Brave:</strong> Ajustes &rarr; Privacidad y seguridad &rarr; Usar DNS seguro &rarr; Con: "Personalizado" &rarr; Pega la URL de arriba.</li>
-            <li><strong>En Firefox:</strong> Ajustes &rarr; Privacidad &rarr; DNS sobre HTTPS &rarr; Protección Máxima &rarr; Personalizado.</li>
-            <li><strong>En Android:</strong> Ajustes de red &rarr; DNS privado.</li>
-          </ol>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="g-btn-primary" id="modal-ok-btn">Entendido</button>
-      </div>
+    <div class="popup-footer">
+      <button type="button" class="popup-close-btn" id="shield-close-btn">Cerrar</button>
     </div>
   </div>
 
