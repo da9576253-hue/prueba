@@ -4,18 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mozilla Firefox — Navegador Web Privado</title>
-  <!-- Favicon oficial de Mozilla Firefox -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23ff9400' d='M16 2C8.27 2 2 8.27 2 16s6.27 14 14 14 14-6.27 14-14S23.73 2 16 2z'/%3E%3Cpath fill='%23ff3a00' d='M25.7 8.5C23.6 5.8 20.2 4 16 4 9.4 4 4 9.4 4 16c0 3.2 1.3 6.1 3.4 8.2.3-.5.7-1.1 1.1-1.6C7.5 21 6.5 19 6.5 16.8c0-4.7 3.5-8.5 8-8.9-.4.9-.6 1.9-.6 3 0 3.9 3.1 7.1 7 7.1 1.2 0 2.3-.3 3.3-.9.4 1.7.1 3.5-.8 5-.6 1-1.4 1.8-2.4 2.4 4.5-.8 8-4.7 8-9.5 0-2.5-.9-4.8-2.3-6.5z'/%3E%3Cpath fill='%23ffe600' d='M19.5 12c-2.5 0-4.5 2-4.5 4.5 0 .8.2 1.6.6 2.2.8-1.5 2.2-2.7 4-3.1-.1-1.9-.1-3.6-.1-3.6z'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="firefox-theme-dark">
 
-  <!-- VENTANA PRINCIPAL DE MOZILLA FIREFOX -->
-  <div id="firefox-window" class="firefox-window">
+  <div class="firefox-window">
 
-    <!-- 1. BARRA DE PESTAÑAS DE FIREFOX -->
-    <div class="firefox-tabs-bar" id="tabs-bar">
-      <!-- Icono Firefox -->
+    <!-- 1. BARRA DE PESTAÑAS OFICIAL DE FIREFOX -->
+    <header class="firefox-tabs-bar">
       <div class="firefox-brand-icon" title="Mozilla Firefox Web">
         <svg width="22" height="22" viewBox="0 0 32 32">
           <path fill="#ff9400" d="M16 2C8.27 2 2 8.27 2 16s6.27 14 14 14 14-6.27 14-14S23.73 2 16 2z"/>
@@ -24,202 +21,109 @@
         </svg>
       </div>
 
-      <!-- Lista de pestañas activas -->
       <div class="firefox-tabs-list" id="tabs-container">
-        <!-- Pestaña 1 por defecto -->
-        <div class="firefox-tab active" data-tab-id="1">
-          <span class="tab-favicon">🦊</span>
-          <span class="tab-title">Nueva pestaña</span>
-          <button type="button" class="tab-close-btn" title="Cerrar pestaña">&times;</button>
+        <div class="firefox-tab active" id="tab-primary">
+          <span class="tab-favicon" id="tab-favicon">🦊</span>
+          <span class="tab-title" id="tab-title">Google en Firefox</span>
+          <button type="button" class="tab-close-btn" id="tab-reset-btn" title="Reiniciar a inicio">&times;</button>
         </div>
       </div>
 
-      <!-- Botón nueva pestaña '+' -->
-      <button type="button" class="firefox-new-tab-btn" id="new-tab-btn" title="Abrir una nueva pestaña (Ctrl+T)">
+      <button type="button" class="firefox-new-tab-btn" id="new-tab-btn" title="Nueva búsqueda / Pestaña">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
       </button>
 
-      <!-- Controles de ventana / Privacidad -->
       <div class="firefox-window-controls">
-        <button type="button" class="window-btn" id="private-badge-btn" title="Navegación Privada Cifrada Activa">
-          <span class="private-mask-icon">🎭</span>
-          <span class="private-text">Privada</span>
-        </button>
-        <button type="button" class="window-btn" id="theme-btn" title="Cambiar tema (Oscuro / Claro)">🌓</button>
+        <span class="private-badge" title="Túnel VPN Web Cifrado Activo">
+          🎭 Privada
+        </span>
+        <button type="button" class="window-btn" id="theme-btn" title="Alternar Modo Oscuro / Claro">🌓</button>
       </div>
-    </div>
+    </header>
 
-    <!-- 2. BARRA DE NAVEGACIÓN Y HERRAMIENTAS (TOOLBAR) -->
-    <div class="firefox-toolbar">
+    <!-- 2. BARRA DE HERRAMIENTAS Y DIRECCIONES (FIREFOX OMNIBOX) -->
+    <nav class="firefox-toolbar">
       <div class="nav-buttons">
-        <button type="button" class="tool-btn" id="nav-back-btn" title="Retroceder una página">
+        <button type="button" class="tool-btn" id="nav-back-btn" title="Atrás">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
         </button>
-        <button type="button" class="tool-btn" id="nav-forward-btn" title="Avanzar una página">
+        <button type="button" class="tool-btn" id="nav-forward-btn" title="Adelante">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
         </button>
-        <button type="button" class="tool-btn" id="nav-reload-btn" title="Recargar página actual">
+        <button type="button" class="tool-btn" id="nav-reload-btn" title="Recargar">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
         </button>
-        <button type="button" class="tool-btn" id="nav-home-btn" title="Página de inicio de Firefox">
+        <button type="button" class="tool-btn" id="nav-home-btn" title="Inicio de Google">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         </button>
       </div>
 
-      <!-- BARRA DE DIRECCIONES Y BÚSQUEDA (OMNIBOX) -->
+      <!-- Barra de direcciones / Buscador -->
       <div class="firefox-address-bar-wrap">
-        <!-- Escudo de protección contra el rastreo de Mozilla -->
-        <button type="button" class="firefox-shield-btn" id="firefox-shield-btn" title="Protección contra el rastreo mejorada de Firefox (DoH & VPN Activos)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#00ffff">
+        <button type="button" class="firefox-shield-btn" id="shield-toggle-btn" title="Protección contra rastreo de Mozilla Firefox">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#00ddff">
             <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
           </svg>
         </button>
 
-        <form id="firefox-address-form" class="firefox-address-form" autocomplete="off">
-          <input type="text" id="firefox-address-input" placeholder="Buscar con Google o ingresar dirección web…" spellcheck="false" autocomplete="off">
-          <button type="button" id="address-clear-btn" class="address-clear-btn hidden" title="Limpiar">&times;</button>
-          <button type="submit" class="address-go-btn" title="Navegar seguro">
+        <form id="address-form" class="address-form" autocomplete="off">
+          <input type="text" id="address-input" placeholder="Buscar con Google o ingresar URL en Firefox…" spellcheck="false" autocomplete="off">
+          <button type="button" id="address-clear" class="address-clear hidden">&times;</button>
+          <button type="submit" class="address-go" title="Navegar">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
           </button>
         </form>
       </div>
 
-      <!-- Botones laterales de herramientas -->
       <div class="toolbar-tools">
-        <button type="button" class="tool-btn" id="vpn-doh-pill" title="Túnel VPN & DNS DoH">
-          <span class="status-indicator"></span>
-          <span class="vpn-label">DoH/VPN</span>
-        </button>
-        <button type="button" class="tool-btn" id="menu-btn" title="Menú de Firefox">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        <button type="button" class="tool-btn-pill" id="doh-status-btn" title="DNS sobre HTTPS (DoH) & VPN Activos">
+          <span class="status-dot"></span>
+          <span>DoH / VPN</span>
         </button>
       </div>
-    </div>
+    </nav>
 
-    <!-- 3. BARRA DE MARCADORES (BOOKMARKS BAR) -->
+    <!-- 3. BARRA DE MARCADORES RÁPIDOS -->
     <div class="firefox-bookmarks-bar">
-      <button type="button" class="bookmark-item" data-url="https://www.google.com">
-        <span class="bm-icon">🔍</span> Google
-      </button>
-      <button type="button" class="bookmark-item" data-url="https://es.wikipedia.org">
-        <span class="bm-icon">📚</span> Wikipedia
-      </button>
-      <button type="button" class="bookmark-item" data-url="https://www.youtube.com">
-        <span class="bm-icon">📺</span> YouTube
-      </button>
-      <button type="button" class="bookmark-item" data-url="https://news.google.com">
-        <span class="bm-icon">📰</span> Noticias
-      </button>
-      <button type="button" class="bookmark-item" data-url="https://duckduckgo.com">
-        <span class="bm-icon">🦆</span> DuckDuckGo
-      </button>
-      <button type="button" class="bookmark-item" data-url="https://translate.google.com">
-        <span class="bm-icon">🌐</span> Traductor
-      </button>
-      <button type="button" class="bookmark-item" data-url="https://reddit.com">
-        <span class="bm-icon">👽</span> Reddit
-      </button>
+      <button type="button" class="bm-btn" data-url="https://www.google.com"><span class="bm-emoji">🔍</span> Google</button>
+      <button type="button" class="bm-btn" data-url="https://es.wikipedia.org"><span class="bm-emoji">📚</span> Wikipedia</button>
+      <button type="button" class="bm-btn" data-url="https://www.youtube.com"><span class="bm-emoji">📺</span> YouTube</button>
+      <button type="button" class="bm-btn" data-url="https://news.google.com"><span class="bm-emoji">📰</span> Noticias</button>
+      <button type="button" class="bm-btn" data-url="https://duckduckgo.com"><span class="bm-emoji">🦆</span> DuckDuckGo</button>
+      <button type="button" class="bm-btn" data-url="https://translate.google.com"><span class="bm-emoji">🌐</span> Traductor</button>
+      <button type="button" class="bm-btn" data-url="https://reddit.com"><span class="bm-emoji">👽</span> Reddit</button>
     </div>
 
-    <!-- 4. ÁREA DE VISUALIZACIÓN DE PESTAÑAS (VIEWPORT) -->
-    <div class="firefox-content-viewport" id="content-viewport">
+    <!-- 4. EL IFRAME DE MOZILLA FIREFOX OCUPANDO TODA LA PANTALLA -->
+    <main class="firefox-viewport">
+      <iframe
+        id="firefox-iframe"
+        name="firefox-iframe"
+        class="firefox-iframe"
+        src="/proxy?url=https%3A%2F%2Fwww.google.com&embed=1"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </main>
 
-      <!-- PÁGINA DE INICIO DE FIREFOX (ABOUT:HOME / NEW TAB) -->
-      <div id="firefox-home-page" class="firefox-home-page">
-        <div class="firefox-hero">
-          <!-- Logo de Firefox Oficial -->
-          <div class="firefox-logo-wrap">
-            <svg width="90" height="90" viewBox="0 0 32 32">
-              <path fill="#ff9400" d="M16 2C8.27 2 2 8.27 2 16s6.27 14 14 14 14-6.27 14-14S23.73 2 16 2z"/>
-              <path fill="#ff3a00" d="M25.7 8.5C23.6 5.8 20.2 4 16 4 9.4 4 4 9.4 4 16c0 3.2 1.3 6.1 3.4 8.2.3-.5.7-1.1 1.1-1.6C7.5 21 6.5 19 6.5 16.8c0-4.7 3.5-8.5 8-8.9-.4.9-.6 1.9-.6 3 0 3.9 3.1 7.1 7 7.1 1.2 0 2.3-.3 3.3-.9.4 1.7.1 3.5-.8 5-.6 1-1.4 1.8-2.4 2.4 4.5-.8 8-4.7 8-9.5 0-2.5-.9-4.8-2.3-6.5z"/>
-              <path fill="#ffe600" d="M19.5 12c-2.5 0-4.5 2-4.5 4.5 0 .8.2 1.6.6 2.2.8-1.5 2.2-2.7 4-3.1-.1-1.9-.1-3.6-.1-3.6z"/>
-            </svg>
-          </div>
-          <h1>Firefox</h1>
-          <p class="firefox-tagline">Navegación Privada • VPN Integrada • DNS Seguro DoH</p>
-        </div>
-
-        <!-- Buscador Central de Firefox -->
-        <div class="firefox-home-search">
-          <form id="home-search-form" autocomplete="off">
-            <div class="home-search-box">
-              <span class="home-search-icon">🔍</span>
-              <input type="text" id="home-search-input" placeholder="Buscar con Google o ingresar dirección…" autofocus>
-              <button type="submit" class="home-search-btn">Buscar</button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Atajos Rápidos / Sitios Top -->
-        <div class="firefox-shortcuts-grid">
-          <div class="shortcut-tile" data-url="https://www.google.com">
-            <div class="tile-icon" style="background:#4285F4;color:#fff;">G</div>
-            <span class="tile-label">Google</span>
-          </div>
-          <div class="shortcut-tile" data-url="https://es.wikipedia.org">
-            <div class="tile-icon" style="background:#f6f6f6;color:#333;">W</div>
-            <span class="tile-label">Wikipedia</span>
-          </div>
-          <div class="shortcut-tile" data-url="https://www.youtube.com">
-            <div class="tile-icon" style="background:#FF0000;color:#fff;">▶</div>
-            <span class="tile-label">YouTube</span>
-          </div>
-          <div class="shortcut-tile" data-url="https://duckduckgo.com">
-            <div class="tile-icon" style="background:#DE5833;color:#fff;">🦆</div>
-            <span class="tile-label">DuckDuckGo</span>
-          </div>
-          <div class="shortcut-tile" data-url="https://elpais.com">
-            <div class="tile-icon" style="background:#003366;color:#fff;">📰</div>
-            <span class="tile-label">El País</span>
-          </div>
-          <div class="shortcut-tile" data-url="https://news.google.com">
-            <div class="tile-icon" style="background:#34A853;color:#fff;">N</div>
-            <span class="tile-label">Noticias</span>
-          </div>
-        </div>
-
-        <div class="firefox-privacy-banner">
-          <span class="badge-lock">🔒 Protegido</span>
-          <p>Tus consultas viajan cifradas con TLS. Los sitios que visites solo verán la IP del servidor en Render y las solicitudes DNS se resuelven mediante <strong>DNS sobre HTTPS (DoH)</strong>.</p>
-        </div>
-      </div>
-
-      <!-- CONTENEDOR DE PESTAÑAS WEB (IFRAMES VIRTUALES) -->
-      <div id="web-frames-container" class="web-frames-container"></div>
-    </div>
   </div>
 
-  <!-- PANEL DE PROTECCIÓN CONTRA EL RASTREO (SHIELD POPUP) -->
-  <div id="shield-popup" class="shield-popup hidden">
-    <div class="popup-header">
-      <div class="shield-badge">🛡️ ACTIVA</div>
-      <h3>Protección de Mozilla Firefox</h3>
-    </div>
-    <div class="popup-body">
-      <div class="feature-row">
-        <span class="feat-icon">✅</span>
-        <div class="feat-info">
-          <strong>Protección contra el rastreo mejorada</strong>
-          <p>Bloqueo de rastreadores, cookies de terceros y scripts criptomineros.</p>
-        </div>
+  <!-- POPUP DEL ESCUDO FIREFOX -->
+  <div id="shield-modal" class="shield-modal hidden">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="shield-badge">🛡️ ACTIVA</div>
+        <h3>Protección de Mozilla Firefox</h3>
+        <button type="button" class="modal-x" id="shield-x-btn">&times;</button>
       </div>
-      <div class="feature-row">
-        <span class="feat-icon">✅</span>
-        <div class="feat-info">
-          <strong>DNS sobre HTTPS (DoH)</strong>
-          <p>Resolución cifrada RFC 8484 para evitar espionaje del ISP.</p>
-        </div>
+      <div class="modal-content">
+        <p><strong>Navegación Cifrada de Extremo a Extremo:</strong> Todo el tráfico dentro del iframe viaja a través del proxy seguro del servidor con TLS 1.3.</p>
+        <p><strong>DNS sobre HTTPS (DoH):</strong> Las consultas de dominio no pasan por tu ISP, evitando bloqueos y espionaje.</p>
+        <p><strong>IP Protegida:</strong> Tu dirección IP real nunca llega a los sitios que visites dentro de Firefox.</p>
       </div>
-      <div class="feature-row">
-        <span class="feat-icon">✅</span>
-        <div class="feat-info">
-          <strong>Túnel VPN Web Cifrado</strong>
-          <p>Tu dirección IP real está oculta tras el servidor de Render.</p>
-        </div>
+      <div class="modal-foot">
+        <button type="button" class="modal-btn" id="shield-ok-btn">Entendido</button>
       </div>
-    </div>
-    <div class="popup-footer">
-      <button type="button" class="popup-close-btn" id="shield-close-btn">Cerrar</button>
     </div>
   </div>
 

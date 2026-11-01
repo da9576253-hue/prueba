@@ -25,6 +25,7 @@ const { queryBinaryUpstream, queryJsonUpstream } = require('./lib/doh');
 const { handleProxyRequest, decodeTargetUrl, encodeProxyUrl } = require('./lib/proxy');
 const { getSuggestions } = require('./lib/suggest');
 const {
+  searchBrave,
   searchBing,
   searchGoogleDirect,
   searchSearXNG,
@@ -197,20 +198,23 @@ async function search(q, category = 'all') {
     });
   }
 
-  // 2. Bing con cabeceras Mozilla Firefox (Inmune a bloqueos de datacenters en Render)
-  providers.push(async () => searchBing(cleanQ));
+  // 2. Brave Search (JSON independiente, nunca bloquea IPs de datacenter)
+  providers.push(async () => searchBrave(cleanQ));
 
-  // 3. Google Directo (Modo ligero GBV=1 con Mozilla Firefox)
-  providers.push(async () => searchGoogleDirect(cleanQ));
+  // 3. Wikipedia API (JSON puro, 100% infalible en Render)
+  providers.push(async () => searchWikipedia(cleanQ));
 
-  // 4. SearXNG JSON API (Meta-buscador sin bloqueo de datacenters)
-  providers.push(async () => searchSearXNG(cleanQ));
-
-  // 5. DuckDuckGo Instant Answer JSON API (API oficial JSON)
+  // 4. DuckDuckGo Instant Answer JSON API (API oficial JSON)
   providers.push(async () => searchDdgJson(cleanQ));
 
-  // 6. Wikipedia Knowledge Search API (100% infalible en Render)
-  providers.push(async () => searchWikipedia(cleanQ));
+  // 5. SearXNG JSON API (Meta-buscador sin bloqueo de datacenters)
+  providers.push(async () => searchSearXNG(cleanQ));
+
+  // 6. Bing con cabeceras Mozilla Firefox (Inmune a bloqueos de datacenters en Render)
+  providers.push(async () => searchBing(cleanQ));
+
+  // 7. Google Directo (Modo ligero GBV=1 con Mozilla Firefox)
+  providers.push(async () => searchGoogleDirect(cleanQ));
 
   let results = [];
   for (const run of providers) {

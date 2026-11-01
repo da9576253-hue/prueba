@@ -1,4 +1,4 @@
-/* Estilos del Navegador Mozilla Firefox Web (Proton UI) */
+/* Estilos Oficiales del Navegador Mozilla Firefox Web (Proton UI) */
 :root {
   --fx-bg-dark: #1c1b22;
   --fx-tab-bar: #1c1b22;
@@ -49,7 +49,6 @@ html, body {
   font-family: var(--fx-font);
 }
 
-/* VENTANA PRINCIPAL DE FIREFOX */
 .firefox-window {
   display: flex;
   flex-direction: column;
@@ -63,16 +62,15 @@ html, body {
   align-items: center;
   background-color: var(--fx-tab-bar);
   height: 42px;
-  padding: 0 8px;
-  gap: 6px;
-  border-bottom: 1px solid rgba(0,0,0,0.15);
+  padding: 0 10px;
+  gap: 8px;
   user-select: none;
 }
 
 .firefox-brand-icon {
   display: flex;
   align-items: center;
-  padding: 4px;
+  padding: 2px;
 }
 
 .firefox-tabs-list {
@@ -81,43 +79,28 @@ html, body {
   height: 100%;
   gap: 4px;
   flex: 1;
-  overflow-x: auto;
-}
-.firefox-tabs-list::-webkit-scrollbar {
-  display: none;
 }
 
 .firefox-tab {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: transparent;
-  color: var(--fx-tab-text-inactive);
-  padding: 0 12px;
-  height: 34px;
-  border-radius: 8px 8px 0 0;
-  font-size: 12px;
-  max-width: 200px;
-  min-width: 120px;
-  cursor: pointer;
-  position: relative;
-  transition: background 0.15s, color 0.15s;
-}
-.firefox-tab:hover {
-  background: var(--fx-tab-hover);
-  color: var(--fx-tab-text);
-}
-.firefox-tab.active {
   background: var(--fx-tab-active);
   color: var(--fx-tab-text);
-  font-weight: 500;
-  box-shadow: 0 -1px 3px rgba(0,0,0,0.2);
+  padding: 0 14px;
+  height: 34px;
+  border-radius: 8px 8px 0 0;
+  font-size: 13px;
+  max-width: 260px;
+  min-width: 150px;
+  cursor: pointer;
+  box-shadow: 0 -1px 4px rgba(0,0,0,0.2);
 }
 
 .tab-favicon {
   font-size: 14px;
-  flex-shrink: 0;
 }
+
 .tab-title {
   white-space: nowrap;
   overflow: hidden;
@@ -137,11 +120,9 @@ html, body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  opacity: 0.7;
 }
 .tab-close-btn:hover {
   background: rgba(255,255,255,0.2);
-  opacity: 1;
 }
 
 .firefox-new-tab-btn {
@@ -155,7 +136,6 @@ html, body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.15s;
 }
 .firefox-new-tab-btn:hover {
   background: var(--fx-tab-hover);
@@ -165,7 +145,17 @@ html, body {
 .firefox-window-controls {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+}
+
+.private-badge {
+  background: var(--fx-purple-private);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 99px;
+  letter-spacing: 0.3px;
 }
 
 .window-btn {
@@ -175,22 +165,13 @@ html, body {
   padding: 4px 8px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  font-size: 14px;
 }
 .window-btn:hover {
   background: var(--fx-tab-hover);
 }
-#private-badge-btn {
-  background: var(--fx-purple-private);
-  color: #fff;
-  font-weight: 600;
-  padding: 3px 10px;
-}
 
-/* 2. BARRA DE HERRAMIENTAS Y DIRECCIONES (TOOLBAR) */
+/* 2. BARRA DE HERRAMIENTAS Y DIRECCIONES */
 .firefox-toolbar {
   display: flex;
   align-items: center;
@@ -198,21 +179,21 @@ html, body {
   height: 44px;
   padding: 0 10px;
   gap: 8px;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(0,0,0,0.15);
 }
 
 .nav-buttons {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
 }
 
 .tool-btn {
   background: transparent;
   border: none;
   color: var(--fx-text-main);
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -224,7 +205,6 @@ html, body {
   background: var(--fx-tab-hover);
 }
 
-/* Barra de direcciones de Firefox */
 .firefox-address-bar-wrap {
   flex: 1;
   display: flex;
@@ -252,14 +232,14 @@ html, body {
   margin-right: 8px;
 }
 
-.firefox-address-form {
+.address-form {
   display: flex;
   align-items: center;
   flex: 1;
   height: 100%;
 }
 
-#firefox-address-input {
+#address-input {
   flex: 1;
   background: transparent;
   border: none;
@@ -269,7 +249,7 @@ html, body {
   font-family: inherit;
 }
 
-.address-clear-btn {
+.address-clear {
   background: transparent;
   border: none;
   color: var(--fx-text-muted);
@@ -277,11 +257,11 @@ html, body {
   cursor: pointer;
   padding: 0 4px;
 }
-.address-clear-btn.hidden {
+.address-clear.hidden {
   display: none;
 }
 
-.address-go-btn {
+.address-go {
   background: transparent;
   border: none;
   color: var(--fx-accent);
@@ -297,16 +277,24 @@ html, body {
   gap: 4px;
 }
 
-#vpn-doh-pill {
-  width: auto;
-  padding: 0 8px;
-  gap: 6px;
+.tool-btn-pill {
+  background: transparent;
+  border: 1px solid rgba(0,221,255,0.3);
+  color: #00ddff;
   font-size: 11px;
   font-weight: 600;
-  color: #00ddff;
-  border: 1px solid rgba(0,221,255,0.3);
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.status-indicator {
+.tool-btn-pill:hover {
+  background: rgba(0,221,255,0.1);
+}
+
+.status-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -314,7 +302,7 @@ html, body {
   box-shadow: 0 0 4px #00ddff;
 }
 
-/* 3. BARRA DE MARCADORES (BOOKMARKS) */
+/* 3. BARRA DE MARCADORES */
 .firefox-bookmarks-bar {
   display: flex;
   align-items: center;
@@ -329,7 +317,7 @@ html, body {
   display: none;
 }
 
-.bookmark-item {
+.bm-btn {
   background: transparent;
   border: none;
   color: var(--fx-tab-text-inactive);
@@ -342,195 +330,61 @@ html, body {
   gap: 4px;
   white-space: nowrap;
 }
-.bookmark-item:hover {
+.bm-btn:hover {
   background: var(--fx-tab-hover);
   color: var(--fx-tab-text);
 }
 
-/* 4. VIEWPORT DE CONTENIDO */
-.firefox-content-viewport {
+/* 4. EL IFRAME DE FIREFOX OCUPANDO TODA LA PANTALLA */
+.firefox-viewport {
   flex: 1;
+  width: 100%;
+  height: calc(100vh - 114px);
   position: relative;
-  background: #2b2a33;
+  background: #ffffff;
 }
 
-/* PÁGINA DE INICIO DE FIREFOX */
-.firefox-home-page {
-  position: absolute;
+.firefox-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  background: #ffffff;
+}
+
+/* MODAL DEL ESCUDO */
+.shield-modal {
+  position: fixed;
   inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 3000;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  overflow-y: auto;
 }
-.firefox-home-page.hidden {
+.shield-modal.hidden {
   display: none;
 }
-
-.firefox-hero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 24px;
-}
-.firefox-logo-wrap {
-  margin-bottom: 12px;
-}
-.firefox-hero h1 {
-  font-size: 38px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-.firefox-tagline {
-  color: var(--fx-text-muted);
-  font-size: 14px;
-  margin-top: 4px;
-}
-
-.firefox-home-search {
-  width: 100%;
-  max-width: 600px;
-  margin-bottom: 30px;
-}
-.home-search-box {
-  display: flex;
-  align-items: center;
-  background: var(--fx-omnibox-bg);
-  border: 1px solid var(--fx-omnibox-border);
-  border-radius: 8px;
-  height: 48px;
-  padding: 0 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-}
-.home-search-icon {
-  font-size: 18px;
-  margin-right: 12px;
-  opacity: 0.6;
-}
-#home-search-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--fx-text-main);
-  font-size: 16px;
-  font-family: inherit;
-}
-.home-search-btn {
-  background: var(--fx-accent);
-  color: #0f172a;
-  border: none;
-  font-weight: 700;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.firefox-shortcuts-grid {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.shortcut-tile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  width: 80px;
-  transition: background 0.15s;
-}
-.shortcut-tile:hover {
-  background: var(--fx-tab-hover);
-}
-.tile-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
-.tile-label {
-  font-size: 11px;
-  color: var(--fx-text-main);
-}
-
-.firefox-privacy-banner {
-  max-width: 580px;
-  background: rgba(0,0,0,0.25);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  padding: 12px 18px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 12px;
-  color: var(--fx-text-muted);
-}
-.badge-lock {
-  background: var(--fx-purple-private);
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-/* CONTENEDOR DE IFRAMES DE PESTAÑAS */
-.web-frames-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-.web-frame {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: #ffffff;
-  display: none;
-}
-.web-frame.active {
-  display: block;
-}
-
-/* POPUP DEL ESCUDO FIREFOX */
-.shield-popup {
-  position: absolute;
-  top: 80px;
-  left: 120px;
+.modal-card {
   background: #2b2a33;
   border: 1px solid #42414d;
-  border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  width: 320px;
-  z-index: 2000;
-  animation: popup-enter 0.15s ease-out;
+  border-radius: 12px;
+  max-width: 460px;
+  width: 100%;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+  overflow: hidden;
 }
-@keyframes popup-enter {
-  from { opacity: 0; transform: translateY(-6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.shield-popup.hidden {
-  display: none;
-}
-.popup-header {
-  padding: 14px 16px;
+.modal-head {
+  padding: 16px 20px;
   border-bottom: 1px solid #42414d;
   display: flex;
   align-items: center;
   gap: 10px;
+}
+.modal-head h3 {
+  font-size: 15px;
+  flex: 1;
 }
 .shield-badge {
   background: #00ddff;
@@ -540,39 +394,37 @@ html, body {
   padding: 2px 6px;
   border-radius: 4px;
 }
-.popup-body {
-  padding: 16px;
+.modal-x {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+.modal-content {
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-.feature-row {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-.feat-info strong {
   font-size: 13px;
-  display: block;
-  margin-bottom: 2px;
+  color: var(--fx-tab-text-inactive);
+  line-height: 1.5;
 }
-.feat-info p {
-  font-size: 11px;
-  color: var(--fx-text-muted);
-  line-height: 1.4;
+.modal-content strong {
+  color: #fff;
 }
-.popup-footer {
-  padding: 10px 16px;
+.modal-foot {
+  padding: 12px 20px;
   border-top: 1px solid #42414d;
   display: flex;
   justify-content: flex-end;
 }
-.popup-close-btn {
-  background: #42414d;
-  color: #fff;
+.modal-btn {
+  background: #00ddff;
+  color: #000;
   border: none;
+  padding: 6px 16px;
   border-radius: 4px;
-  padding: 4px 12px;
-  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
 }
